@@ -1,0 +1,26 @@
+{
+  "index.qmd": {
+    "index.html": "ab7c829b"
+  },
+  "about.qmd": {
+    "about.html": "d1fd6f08"
+  },
+  "Datos.qmd": {
+    "Datos.html": "51db045c"
+  },
+  "Analisis1.qmd": {
+    "Analisis1.html": "9192111b"
+  },
+  "dashboard.qmd": {
+    "dashboard.html": "6f890583"
+  },
+  "Antecedentes.qmd": {
+    "Antecedentes.html": "0af06088"
+  },
+  "ResumenIntro.qmd": {
+    "ResumenIntro.html": "f90460a3"
+  },
+  "PCA.qmd": {
+    "PCA.html": "b37f4b13"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "hash": "e2a0f402430a25d781d0b0dc8f9fc0ec",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"About\"\n---\n\n\nEste sitio consiste en el Trabajo final de la asignatura Estadística Descriptiva Multivariada de la Universidad Nacional de Colombia durante el primer semestre del año 2024. Los alumnos responsables de este trabajo son Juan Pablo Montaño y Laura.\n                              \nEs importante aclarar y recordar que toda la información y análisis presentado en este proyecto tienen únicamente un propósito académico y no deben ser interpretradas como recomendaciones de políticas públicas o similares. También, los códigos y gráficos mostrados no tienen como objetivo perjudicar al Instituto Nacional de Estadística y Geografía (INEGI).\n                    \nFinalmente, recordamos que este estudio ha sido elaborado en base a los datos que están disponibles de forma pública en sitio web  [inegi.org.mx](https://www.inegi.org.mx/programas/enpol/2021/#datos_abiertos). La información completa sobre el procesamiento de datos hecho por la entidad se encuentra disponible en el marco conceptual y diseño muestral de la encuesta, también disponibles para el público. \n\n::: {fig}\n![](Logo_INEGI.jpg){width=\"20%\" fig-align=\"left\"}\n:::\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
