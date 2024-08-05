@@ -1,0 +1,1192 @@
+---
+title: "Análisis descriptivo univariado"
+format: 
+  dashboard
+theme: 
+  light: [simplex, theme/custom.scss]
+  dark: [slate, theme/custom-dark.scss]
+fig-width: 8
+fig-asp: 0.2
+params:
+  month: "October"
+  year: "2024"
+  # 2021 rates: https://www.cdc.gov/nchs/data/nvsr/nvsr72/nvsr72-01.pdf
+editor_options: 
+  chunk_output_type: console
+scrolling: true
+---
+
+```{r}
+#| label: carga-librerias
+#| message: false
+#| echo: false
+#| output: false
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(plotly)
+library(GGally)
+library(FactoClass)
+library(dplyr)
+library(readxl)
+library(scales)
+library(DT)
+library(gt)
+library(RColorBrewer)
+theme_set(theme_minimal(base_size = 24, base_family = "Atkinson Hyperlegible"))
+```
+
+```{r}
+#| label: carga-datos
+#| echo: false
+#| output: false
+#Tabla1<- read.csv("DatosSeleccionados.csv")
+source("DatosSeleccionados.R")
+```
+
+#  {.sidebar}
+
+![](images/LogoUnal.png){width="90%" fig-align="left"}
+
+## Menú de navegación
+
+::: {.callout-tip icon="false" collapse="true" appearance="simple"}
+### Inicio
+
+-   [Inicio](ResumenIntro.qmd)
+:::
+
+::: {.callout-tip icon="false" collapse="true" appearance="simple"}
+### Marco conceptual
+
+-   [Marco de antecedentes](Antecedentes.qmd)
+-   [Objetivos y justificación](index.qmd)
+-   [Descripción de los datos](Datos.qmd)
+:::
+
+::: {.callout-tip icon="false" collapse="true" appearance="simple"}
+### Análisis descriptivo
+
+-   [Análisis descriptivo univariado](dashboard.qmd)
+-   [Análisis descriptivo bivariado](https://qglhmj-juan0pablo-montano0diaz.shinyapps.io/analisis_descriptivo_bivariado/)
+-   [Análisis de componentes principales (PCA)](ACP.qmd)
+:::
+
+::: {.callout-tip icon="false" collapse="true" appearance="simple"}
+### Sobre nosotros
+
+-   [Sobre nosotros](about.qmd)
+:::
+
+------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true"}
+## Recordatorio
+
+Este estudio ha sido elaborado en base a los datos que están disponibles de forma pública en sitio web del INEGI. La información completa sobre el procesamiento de datos hecho por la entidad se encuentra disponible en el marco conceptual y diseño muestral de la encuesta, también disponibles para el público.
+:::
+
+# Var. Demográficas
+
+## Cuadros {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "N° Registros"
+
+list(
+  icon = "person-bounding-box",
+  color = "gray",#"primary",
+  value = nrow(Tabla1)
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Var. demográficas consideradas"
+
+list(
+  icon = "database-check",
+  color = "gray",#p_cesarean_color,
+  value = 25
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Var. demográficas iniciales"
+
+list(
+  icon = "building-fill-lock",
+  color = "gray",#p_preterm_color,
+  value = 182#label_percent(accuracy = 0.1)(p_preterm)
+)
+```
+
+## Sexo y Estado {height="30%"}
+
+### Sexo {width="40%"}
+
+```{r}
+#| title: Sexo
+#| label: Grafico-sexo
+#| echo: false
+
+df <- Tabla1
+df <- df %>% group_by(SEXO)
+df <- df %>% summarize(count = n())
+figSexo <- df %>% plot_ly(labels = c("Hombre","Mujer"), values = ~count, marker=list(colors= c("#0e2635","#ae8b2d")))
+figSexo <- figSexo %>% add_pie(hole = 0.6)
+figSexo <- figSexo %>% layout(showlegend = T, legend = list(font = list(size = 10),
+                      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                      yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
+
+figSexo
+
+```
+
+### Estado civil {width="60%"}
+
+```{r}
+#| title: Estado civil
+#| label: Grafico-Estado-civil
+#| echo: false
+
+df <- Tabla1
+df <- df %>% group_by(EST_CIVIL)
+df <- df %>% summarize(count = n())
+figEstCivil <- df %>% plot_ly(labels = c("Unión libre","Separado/a de unión libre","Separado/a de un matrimonio","Casado/a","Soltero/a","Divorciado/a","Viudo/a","No sabe","No responde"), values = ~count)
+figEstCivil <- figEstCivil %>% add_pie(hole = 0.6)
+figEstCivil <- figEstCivil %>% layout(showlegend = T,legend = list(font = list(size = 10) ,xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
+
+figEstCivil
+
+```
+
+## Row {height="35%"}
+
+### Tiempo en la carcel {width="55%"}
+
+```{r}
+#| title: Tiempo privado de la libertad
+#| label: Grafico-Tiempo-carcel
+#| echo: false
+
+carcel<-(as.data.frame.matrix(t(table(Tabla1[,c("TIPO_CARCEL","TIEMPO_CARCEL")]))))
+rownames(carcel)<-c( "Menos de 6 meses a 1 año",
+    "Más de 6 meses hasta 1 año", 
+    "Más de 1 año hasta 1 año con 6 meses", 
+    "Más de 1 año con 6 meses hasta 2 años", 
+    "Más de 2 años", 
+    "No sabe", 
+    "No responde")
+colnames(carcel)<-c("Centro varonil","Centro femenil", "Mixto")
+figcarcel <- plot_ly(carcel, x = carcel[["Centro femenil"]], y = ~rownames(carcel), type = 'bar', orientation = 'h', name = 'Centro femenil',marker = list(color = 'rgba(246, 78, 139, 0.6)',
+                      line = list(color = 'rgba(246, 78, 139, 1.0)',
+                                  width = 3)))
+figcarcel <- figcarcel %>% add_trace(x = carcel[["Centro varonil"]], y=~rownames(carcel), name = "Centro varonil",marker = list(color = 'rgba(58, 71, 80, 0.6)', line = list(color = 'rgba(58, 71, 80, 1.0)',
+                                      width = 3)))
+
+
+figcarcel <- figcarcel %>% add_trace(x = carcel[["Mixto"]],y=~rownames(carcel), name = "Mixto",marker = list(color = 'rgba(85, 26, 139, 0.6)',
+                          line = list(color = 'rgba(85, 26, 139, 1.0)',
+                                      width = 3)))
+
+figcarcel <- figcarcel %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figcarcel
+```
+
+### Edad {width="45%"}
+
+```{r}
+#| title: Edad de la persona
+
+#Esto es el gráfico de orientación sexual
+#cat <- attributes(as.factor(Tabla1$P1_23))$levels
+#per <- tabulate(as.factor(Tabla1$P1_23))/nrow(Tabla1)*100
+#data <- data.frame(cat, per)
+#fig <- plot_ly(data, labels=~cat, values=~per, type='pie')
+#fig <- fig %>% layout(title = "Orientación sexual")
+#fig
+
+
+#Este es el gráfico de la edad
+#| echo: true
+fig <- plot_ly(Tabla1, x=~EDAD, type='histogram',
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+fig <- fig %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Edad (años)"))
+fig
+```
+
+## Texto piel {height="35%"}
+
+### Imagen piel {width="40%"}
+
+![](images/Color_pieles.png){width="95%"}
+
+### Grafico piel {width="60%"}
+
+```{r}
+#| title: Según la escala dada a la izquierda. ¿De qué color de piel se percibe?
+#| label: Gráfico-Piel
+Piel<-(data.frame(table(Tabla1$COLOR_PIEL)))
+Piel$Var1<-c("No sabe/No responde","A", "B", "C", "D", "E", "F", "G","H", "I", "J", "K")
+colnames(Piel)<-c("Respuesta","Freq")
+figPiel <- plot_ly(Piel, x = Piel[["Freq"]], y = Piel[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = c("red","black","#321B0F","#492816","#65371E","#714937","rgba(161,110,75,0.6)","#8C644D","#BF9169","pink2","rgba(232,190,172,0.6)",'	rgba(255,231,209,0.6)'),
+                      line = list(color = 'gray',
+                                  width = 2)))
+
+figPiel <- figPiel %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figPiel
+```
+
+## Escolaridad {height="35%"}
+
+```{r}
+#| title: Edad a la que alcanzó su grado de estudios.
+#| label: Gráfico-Edad-estudios
+
+#Tabla1 |> 
+#  count(CONSIDERO_SUICIDIO, SEXO) |>
+#  ggplot(aes(x = n, y = fct_rev(CONSIDERO_SUICIDIO), fill = SEXO)) +
+#  geom_col(position = "fill", color = "white") +
+#  scale_fill_manual(
+#    values = c("#ae8b2d", "#0e2635"),
+#    labels=c("Masculino","Femenino"),
+#    guide = guide_legend(reverse = TRUE)
+#  ) +
+#  scale_x_continuous(labels = label_percent())+
+#  labs(y = NULL, x = NULL, fill = "Sexo")
+
+figEstudios <- plot_ly(Tabla1, x=~EDAD_ESCOLARIDAD, type='histogram',
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+figEstudios <- figEstudios %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Edad (años)"))
+figEstudios
+```
+
+```{r}
+#| title: Máximo grado de estudios alcanzado
+#| label: Gráfico-Grado-estudios
+
+Estudio<-(data.frame(table(Tabla1$NIVEL_ESCOLARIDAD)))
+Estudio$Var1<-c("Ninguno","Preescolar", "Primaria", "Secundaria", "Carrera técnica con sec. terminada", "Normal básica", "Bachillerato", "Técnico con bach. terminado","Licenciatura o profesional", "Maestria o doctorado", "No sabe", "No responde")
+colnames(Estudio)<-c("Respuesta","Freq")
+figEscolar <- plot_ly(Estudio, x = Estudio[["Freq"]], y = Estudio[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figEscolar <- figEscolar %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figEscolar
+```
+
+## Texto {height="10%"}
+
+### Texto 1 {width= "40%"}
+
+**¿Alguna vez ha consumido las siguientes sustancias?**
+
+### Texto 2 {width="60%"}
+
+**Si consumió, ¿a qué edad probó por primera vez las siguientes sustancias?**
+
+## Drogas {height="30%"}
+
+### Consumo drogas {width= "40%"}
+
+#### panel {.tabset}
+
+```{r}
+#| title: Tabaco
+#| echo: false
+
+tabaco<-(data.frame(table(Tabla1$CONSUMO_TABACO)))
+tabaco$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(tabaco)<-c("Respuesta","Freq")
+figtabaco <- plot_ly(tabaco, x = tabaco[["Freq"]], y = tabaco[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figtabaco <- figtabaco %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figtabaco
+```
+
+```{r}
+#| title: Alcohol
+#| label: Grafico-consumo-alcohol
+#| echo: false
+
+alcohol<-(data.frame(table(Tabla1$CONSUMO_ALCOHOL)))
+alcohol$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(alcohol)<-c("Respuesta","Freq")
+figalcohol <- plot_ly(alcohol, x = alcohol[["Freq"]], y = alcohol[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figalcohol <- figalcohol %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figalcohol
+```
+
+```{r}
+#| title: Marihuana
+#| label: Consumo-marihuana
+#| echo: false
+
+marihuana<-(data.frame(table(Tabla1$CONSUMO_MARIHUANA)))
+marihuana$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(marihuana)<-c("Respuesta","Freq")
+figmarihuana <- plot_ly(marihuana, x = marihuana[["Freq"]], y = marihuana[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = "rgba(85, 26, 139, 0.6)",
+                      line = list(color = '"rgba(85, 26, 139, 1.0)"',
+                                  width = 3)))
+
+figmarihuana <- figmarihuana %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figmarihuana
+```
+
+### Histogramas {width="60%"}
+
+#### panel {.tabset}
+
+```{r}
+#| title: Tabaco
+#| label: Edad-comienzo-consumo-Tabaco
+#| echo: false
+
+histTab <- plot_ly(Tabla1, x=~EDAD_CONSUMO_TABACO, type='histogram',
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)),
+                name="Tabaco")
+histTab <- histTab %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Edad (años)"))
+
+histTab
+
+```
+
+```{r}
+#| title: Alcohol
+#| label: Edad-comienzo-consumo-alcohol
+#| echo: false
+histAlc <- plot_ly(Tabla1, x=~EDAD_CONSUMO_ALCOHOL, type='histogram',
+                marker = list(color = "#ae8b2d",
+                            line = list(color = "darkgray",
+                                        width = 1)),
+                name="Alcohol")
+histAlc<- histAlc %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Edad (años)"))
+
+histAlc
+```
+
+```{r}
+#| title: Marihuana
+#| label: Edad-comienzo-consumo-marihuana
+#| echo: false
+histMari <- plot_ly(Tabla1, x=~EDAD_CONSUMO_MARIHUANA, type='histogram',
+                marker = list(color = "rgba(85, 26, 139, 1.0)",
+                            line = list(color = "darkgray",
+                                        width = 1)),name = "Marihuana")
+histMari <- histMari %>% layout(yaxis=list(title='Frec. abs.', legend=list(title="Sustancia")), xaxis=list(title="Edad (años)"))
+
+histMari
+```
+
+## Discapacidad {height="30%"}
+
+```{r}
+#| title: ¿Cuenta con alguna discapacidad?
+#| label: Grafico-discapacidad
+#| echo: false
+
+#Grafico Discapacidad visual
+dVisual <- Tabla1
+dVisual <- dVisual %>% group_by(DISC_VISUAL)
+dVisual <- dVisual %>% summarize(count = n())
+
+#Gráfico discapacidad auditiva
+dAuditiva <- Tabla1
+dAuditiva <- dAuditiva %>% group_by(DISC_AUDITIVA)
+dAuditiva <- dAuditiva %>% summarize(count = n())
+
+#Discapacidad motriz
+dMotriz <- Tabla1
+dMotriz <- dMotriz %>% group_by(DISC_MOTRIZ)
+dMotriz <- dMotriz %>% summarize(count = n())
+
+figDisc<-plot_ly()
+figDisc <- figDisc %>% add_pie(data = dVisual, labels = c("Sí","No","No sabe","No responde"), values = ~count, textinfo='percent', showlegend=F, title="Visual",
+                       name = "Visual", domain = list(row=0, column=0), marker=list(colors= c("#ae8b2d","#0e2635","red3","green4")),hole=0.6)
+figDisc <- figDisc %>% add_pie(data = dAuditiva, labels = c("Sí","No","No sabe","No responde"), values = ~count, textinfo='percent', showlegend=F, title="Auditiva",
+                       name = "Auditiva", domain = list(row=0, column = 1),marker=list(colors= c("#ae8b2d","#0e2635","red3","green4")),hole=0.6)
+
+figDisc <- figDisc %>% add_pie(data = dMotriz, labels = c("Sí","No","No sabe","No responde"), values = ~count, textinfo='percent', showlegend=F, title="Motriz",
+                       name = "Motriz", domain = list(row=0, column = 2),marker=list(colors= c("#ae8b2d","#0e2635","red3","green4")),hole=0.6)
+
+figDisc <- figDisc %>% layout(showlegend = T,
+                      grid=list(rows=1, columns=3),
+                      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                      yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+
+figDisc 
+```
+
+## Comentarios {height= "35%"}
+
+::: card
+**Observaciones**
+
+Al ver los gráficos mostrados en esta sección, podemos ver que la mayoria de variables cualitativas/categóricas tienen una categoría "tendencia", es decir, donde la mayoria de personas se encuentran con gran diferencia.
+
+Vale la pena resaltar el comportamiento de algunas variables, tales como la edad y la edad de la finalización de los estudios. Las cuales presentan una distribución asimétrica. También, se resalta que las respuestas a la pregunta sobre el consumo de marihuana resultan en una partición casi balanceada de la población.
+:::
+
+# Var Económicas {orientation="rows"}
+
+## Cuadros Economicos {height="17%"}
+
+```{r}
+#| component: valuebox
+#| title: "Var. Económicas consideradas"
+
+list(
+  icon = "currency-dollar",
+  color = "#C0C0C0",
+  value = 6
+)
+```
+
+```{r}
+#| component: valuebox
+#| title: "Var. Económicas originales"
+
+list(
+  icon = "cash-coin",
+  color = "#C0C0C0",
+  value = 73
+)
+```
+
+## Personas y vivecon {height= "35%"}
+
+### Personas dependientes {width="60%"}
+
+```{r}
+#| title: Número de personas ecónomicamente dependientes del recluso
+#| label: Grafico-dependenciaeconomica
+#| echo: false
+
+figDependencia <- plot_ly(Tabla1[Tabla1$N_PERSONAS_DEPENDIENTES<quantile(Tabla1$N_PERSONAS_DEPENDIENTES,0.999),], x=~N_PERSONAS_DEPENDIENTES, type='histogram',
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+figDependencia <- figDependencia %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Edad (años)"))
+figDependencia
+
+```
+
+### Vive con {width="40%"}
+
+```{r}
+#| title: Con quien vivía (principalmente) antes de estar en el centro penitenciario
+#| label: Grafico-viviacon
+#| echo: false
+
+df <- Tabla1
+df <- df %>% group_by(VIVE_CON)
+df <- df %>% summarize(count = n())
+figVive <- df %>% plot_ly(labels=c("Abuelos","Amigos","Hermanos","Hijos","Madre/Padre","No sabe/No responde","Otros","Otros familiares","Pareja","Solo"), values = ~count, marker=list(colors= c("#0e2635","#ae8b2d")))
+figVive <- figVive %>% add_pie(hole = 0.6)
+figVive <- figVive %>% layout(showlegend = T, legend = list(font = list(size = 10),
+                      xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                      yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
+
+figVive
+
+```
+
+## Datos Trabajo {height= "45%"}
+
+### Trabajo {width="40%"}
+
+```{r}
+#| title: ¿Alguna vez ha realizado algún trabajo a cambio de un pago/beneficio?
+#| label:  Trabajo
+#| output: true
+
+trabajo<-(data.frame(table(Tabla1$TRABAJO)))
+trabajo$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(trabajo)<-c("Respuesta","Freq")
+figtrabajo <- plot_ly(trabajo, x = trabajo[["Freq"]], y = trabajo[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figtrabajo <- figtrabajo %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figtrabajo
+```
+
+### Dinero del mes {width="60%"}
+
+```{r}
+#| title: Cuánto dinero recibió el mes anterior a su detención
+#| label: Gráfico-dinero
+dinero<-(data.frame(table(Tabla1$SALARIO_MES_ANTERIOR)))
+dinero$Var1<-c("Menos de $3000","De $3000 a $5500", "De $5501 a $7500", "De $7501 a $9000", "De $9001 a $11000", "Más de $11000", "No recibía ingresos", "No quiere decir","No sabe")
+colnames(dinero)<-c("Respuesta","Freq")
+figdinero <- plot_ly(dinero, x = dinero[["Freq"]], y = dinero[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = c(brewer.pal(n=6,"YlOrRd"),"purple1","pink3","lightblue4"),
+                      line = list(color = 'black',
+                                  width = 2)))
+
+figdinero <- figdinero %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figdinero
+```
+
+## Diagramas de barras {height="25%"}
+
+### Comida {width= "50%"}
+
+```{r}
+#| title: ¿Los miembros de su hogar tenían comida todos los días?
+#| label:  Comida
+#| output: true
+
+comida<-(data.frame(table(Tabla1$PODIA_COMER)))
+comida$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(comida)<-c("Respuesta","Freq")
+figcomida <- plot_ly(comida, x = comida[["Freq"]], y = comida[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figcomida <- figcomida %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figcomida
+```
+
+### Deuda {width= "50%"}
+
+```{r}
+#| title: ¿Tenía algún tipo de deuda?
+#| label:  Deuda
+#| output: true
+
+deuda<-(data.frame(table(Tabla1$DEUDA)))
+deuda$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(deuda)<-c("Respuesta","Freq")
+figdeuda <- plot_ly(deuda, x = deuda[["Freq"]], y = deuda[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(85, 26, 139, 0.6)',
+                      line = list(color = 'rgba(85, 26, 139, 1.0)',
+                                  width = 3)))
+
+figdeuda <- figdeuda %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figdeuda
+```
+
+## Comnetarios {height= "30%"}
+
+::: card
+**Observaciones**
+
+En esta sección, las variables cuantitativas son asimétricas, con una gran parte de la población ubicada en el valor 0. Tal como se ve en el gráfico de la cantidad de personas dependientes que se posee.
+
+Sin embargo, algunas variables cualitativas, tales como la deuda y el dinero del mes anterior, resultan en una partición equilibrada de la población, lo que puede resultar útil al momento de realizar análisis descriptivos bivariados.
+:::
+
+# Var Delictivas {orientation="rows"}
+
+## Cuadros Economicos {height="17%"}
+
+```{r}
+#| component: valuebox
+#| title: "Var. Delictivas consideradas"
+
+list(
+  icon = "emoji-dizzy",
+  color = "white",
+  value = 15
+)
+```
+
+```{r}
+#| component: valuebox
+#| title: "Var. Delictivas originales"
+
+list(
+  icon = "emoji-dizzy-fill",
+  color = "white",
+  value = 551
+)
+```
+
+## Antecedentes {height= "30%"}
+
+### Sentenciado Antes {width="40%"}
+
+```{r}
+#| title: Antes de su reclusión actual había sido sentenciado por algún delito
+#| label:  Grafico-Antecedentes1
+#| output: true
+
+crimen<-(data.frame(table(Tabla1$SENTENCIADO_ANTES)))
+crimen$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(crimen)<-c("Respuesta","Freq")
+figcrimen <- plot_ly(crimen, x = crimen[["Freq"]], y = crimen[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figcrimen <- figcrimen %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figcrimen
+```
+
+### Veces sentenciado {width="60%"}
+
+```{r}
+#| title: Cuántas veces estuvo recluido/a en en un centro penitenciario o centro disciplinario para adolescentes
+#| label: Grafico-vecessentenciado
+#| echo: false
+
+figVeces <- plot_ly(Tabla1[Tabla1$VECES_SENTENCIADO<quantile(Tabla1$VECES_SENTENCIADO,0.999),], x=~VECES_SENTENCIADO, type='histogram',nbinsx=30,
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+figVeces <- figVeces %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Veces sentenciado"))
+figVeces
+
+```
+
+## Detención {height="30%"}
+
+### Motivo {width="50%"}
+
+```{r}
+#| title: Motivo por el cual se encuentra en el centro penitenciario
+#| label: Grafico-detencion
+#| echo: false
+
+motivo<-(data.frame(table(Tabla1$MOTIVO_DETENCION)))
+motivo$Var1<-c("Cometió un delito","Ayudó a la realización de un delito", "No ha podido comprobar su inocencia", "Fue acusado falsamente de cometer un delito", "Otro", "No Sabe","No Responde")
+colnames(motivo)<-c("Respuesta","Freq")
+figmotivo <- plot_ly(motivo, x = motivo[["Freq"]], y = motivo[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = c('rgba(14, 38, 53, 0.6)',"#33FFFF","#CC6600","#9933FF","#FF99CC","black","black"),
+                      line = list(color = 'black',
+                                  width = 2)))
+
+figmotivo <- figmotivo %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figmotivo
+
+```
+
+### Tiempo detencion {width="50%"}
+
+```{r}
+#| title: Cuánto tiempo pasó entre el delito y la detención
+#| label: Grafico-detencion2
+#| echo: false
+
+TDet<-(data.frame(table(Tabla1$TIEMPO_DEL_DET)))
+TDet$Var1<-c("Inmediatamente","Menos de una semana", "Más de una semana pero menos de un mes", "Un mes", "Más de un mes y menos de un año","Un año o más", "No Sabe","No Responde")
+colnames(TDet)<-c("Respuesta","Freq")
+figTDet <- plot_ly(TDet, x = TDet[["Freq"]], y = TDet[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = c(brewer.pal(n=6,"BuPu"),"black"),
+                      line = list(color = 'black',
+                                  width = 2)))
+
+figTDet <- figTDet %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figTDet
+
+```
+
+## Tiempos {height= "40%"}
+
+### Tiempo en proceso {width="60%"}
+
+```{r}
+#| title: Cuánto tiempo en total (años) ha durado su proceso de sentencia
+#| label: Grafico-tiempoproceso
+#| echo: false
+
+figAniosProceso <- plot_ly(Tabla1[Tabla1$TIEMPO_PROCESO<quantile(Tabla1$TIEMPO_PROCESO,0.99),], x=~TIEMPO_PROCESO, type='histogram',nbinsx=50,
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+figAniosProceso <- figAniosProceso %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Tiempo (Años)"))
+figAniosProceso
+
+```
+
+### Tiempo en condena {width="40%"}
+
+```{r}
+#| title: Cuánto tiempo en total (años) fue sentenciado a estar dentro del centro penitenciario
+#| label: Grafico-TiempoRecluido
+#| echo: false
+
+figAniosrecluido <- plot_ly(Tabla1[Tabla1$TIEMPO_RECLUIDO<quantile(Tabla1$TIEMPO_RECLUIDO,0.999),], x=~TIEMPO_RECLUIDO, type='histogram',nbinsx=50,
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+figAniosrecluido <- figAniosrecluido %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Tiempo (Años)"))
+figAniosrecluido
+
+```
+
+## Comentarios {height="\"30%"}
+
+::: card
+**Observaciones**
+
+Al igual que las variables económicas, las variables cuantitagtivas poseen una ferte tendencia al valor 0. Y de forma más drástica, las frecuencias de las categorias en las variables cualitativas brindan una partición util y equilibrada de la población para futuros análisis multivariados.
+:::
+
+# Vida intracarcelaria {orientation="rows"}
+
+## Cuadros {height="17%"}
+
+```{r}
+#| component: valuebox
+#| title: "Var. Vida intracarcelaria consideradas"
+
+list(
+  icon = "luggage",
+  color = "white",
+  value = 24
+)
+```
+
+```{r}
+#| component: valuebox
+#| title: "Var. Vida intracarcelaria originales"
+
+list(
+  icon = "luggage-fill",
+  color = "gray",
+  value = 404
+)
+```
+
+## celda {height= "30%"}
+
+### Cuantas horas en celda {width="35%"}
+
+```{r}
+#| title: ¿Cuántas horas pasa en su celda al día?
+#| label: Grafico-horascelda
+#| echo: false
+
+fighorascelda <- plot_ly(Tabla1[Tabla1$CELDA_HORAS<quantile(Tabla1$CELDA_HORAS,0.99),], x=~CELDA_HORAS, type='histogram',nbinsx=15,
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+fighorascelda <- fighorascelda %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Horas"))
+fighorascelda
+
+```
+
+### Personas en la celda {width="65%"}
+
+```{r}
+#| title: Con cuántas personas comparte celda?
+#| label: Grafico-numero-celda
+#| echo: false
+
+figpersonascelda <- plot_ly(Tabla1[Tabla1$CANTIDAD_PERSONAS_CELDA<quantile(Tabla1$CANTIDAD_PERSONAS_CELDA,0.999),], x=~CANTIDAD_PERSONAS_CELDA, type='histogram',nbinsx=50,
+                marker = list(color = "#0e2635",
+                            line = list(color = "darkgray",
+                                        width = 1)))
+figpersonascelda <- figpersonascelda %>% layout(yaxis=list(title='Frec. abs.'), xaxis=list(title="Cantidad personas"))
+figpersonascelda
+
+```
+
+## Texto {height="10%"}
+
+### Texto 1 {width= "50%"}
+
+**En su celda, cuenta con algún acceso a...**
+
+### Texto 2 {width="50%"}
+
+**Dentro del centro penitenciario, puede/tiene acesso a...**
+
+## Condiciones celda y carcel {height="50%"}
+
+### Celda {width= "50%"}
+
+#### panel {.tabset}
+
+```{r}
+#| title: Luz natural
+#| echo: false
+
+Celdaventanas<-(data.frame(table(Tabla1$CELDA_VENTANAS)))
+Celdaventanas$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(Celdaventanas)<-c("Respuesta","Freq")
+figventanas <- plot_ly(Celdaventanas, x = Celdaventanas[["Freq"]], y = Celdaventanas[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figventanas <- figventanas %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figventanas
+```
+
+```{r}
+#| title: Agua potable
+#| label: AguaPotable
+#| echo: false
+
+potable<-(data.frame(table(Tabla1$CELDA_AGUA_POTABLE)))
+potable$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(potable)<-c("Respuesta","Freq")
+figpotable <- plot_ly(potable, x = potable[["Freq"]], y = potable[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figpotable <- figpotable %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figpotable
+```
+
+```{r}
+#| title: Drenaje
+#| label: drenaje
+#| echo: false
+
+drenaje<-(data.frame(table(Tabla1$CELDA_DRENAJE)))
+drenaje$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(drenaje)<-c("Respuesta","Freq")
+figdrenaje <- plot_ly(drenaje, x = drenaje[["Freq"]], y = drenaje[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = "rgba(85, 26, 139, 0.6)",
+                      line = list(color = '"rgba(85, 26, 139, 1.0)"',
+                                  width = 3)))
+
+figdrenaje <- figdrenaje %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figdrenaje
+```
+
+```{r}
+#| title: Luz eléctrica
+#| echo: false
+
+luz<-(data.frame(table(Tabla1$CELDA_LUZ)))
+luz$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(luz)<-c("Respuesta","Freq")
+figluz <- plot_ly(luz, x = luz[["Freq"]], y = luz[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figluz <- figluz %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figluz
+```
+
+```{r}
+#| title: Ducha
+#| label: Ducha
+#| echo: false
+
+ducha<-(data.frame(table(Tabla1$CELDA_DUCHA)))
+ducha$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(ducha)<-c("Respuesta","Freq")
+figducha <- plot_ly(ducha, x = ducha[["Freq"]], y = ducha[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figducha <- figducha %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figducha
+```
+
+```{r}
+#| title: Sanitario
+#| label: sanitario
+#| echo: false
+
+sanitario<-(data.frame(table(Tabla1$CELDA_SANITARIO)))
+sanitario$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(sanitario)<-c("Respuesta","Freq")
+figsanitario <- plot_ly(sanitario, x = sanitario[["Freq"]], y = sanitario[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = "rgba(85, 26, 139, 0.6)",
+                      line = list(color = '"rgba(85, 26, 139, 1.0)"',
+                                  width = 3)))
+
+figsanitario <- figsanitario %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figsanitario
+```
+
+```{r}
+#| title: Servicio médico
+#| echo: false
+
+medico<-(data.frame(table(Tabla1$CELDA_SERVICIO_MEDICO)))
+medico$Var1<-c("Si","No","No lo ha solicitado", "No sabe", "No responde")
+colnames(medico)<-c("Respuesta","Freq")
+figmedico <- plot_ly(medico, x = medico[["Freq"]], y = medico[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figmedico <- figmedico %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figmedico
+```
+
+```{r}
+#| title: Alimentos gratis
+#| label: comidagratis
+#| echo: false
+
+alimentos<-(data.frame(table(Tabla1$CELDA_ALIMENTOS)))
+alimentos$Var1<-c("Si","No", "No sabe","No solicitado", "No responde")
+colnames(alimentos)<-c("Respuesta","Freq")
+figalimentos <- plot_ly(alimentos, x = alimentos[["Freq"]], y = alimentos[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figalimentos <- figalimentos %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figalimentos
+```
+
+```{r}
+#| title: Sentirse seguro
+#| label: celdaseguridad
+#| echo: false
+
+celdaseguridad<-(data.frame(table(Tabla1$CELDA_SEGURIDAD)))
+celdaseguridad$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(celdaseguridad)<-c("Respuesta","Freq")
+figceldaseguridad <- plot_ly(celdaseguridad, x = celdaseguridad[["Freq"]], y = celdaseguridad[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = "rgba(85, 26, 139, 0.6)",
+                      line = list(color = '"rgba(85, 26, 139, 1.0)"',
+                                  width = 3)))
+
+figceldaseguridad <- figceldaseguridad %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figceldaseguridad
+```
+
+### Carcel {width="50%"}
+
+#### panel {.tabset}
+
+```{r}
+#| title: Área de ejercicio
+#| label: ejercicio
+#| echo: false
+
+ejer<-(data.frame(table(Tabla1$CARCEL_EJERCICIO)))
+ejer$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(ejer)<-c("Respuesta","Freq")
+figejer <- plot_ly(ejer, x = ejer[["Freq"]], y = ejer[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figejer <- figejer %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figejer
+```
+
+```{r}
+#| title: material de lectura
+#| label: lectura
+#| echo: false
+
+lec<-(data.frame(table(Tabla1$CARCEL_LECTURA)))
+lec$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(lec)<-c("Respuesta","Freq")
+figlec <- plot_ly(lec, x = lec[["Freq"]], y = lec[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = "rgba(85, 26, 139, 0.6)",
+                      line = list(color = '"rgba(85, 26, 139, 1.0)"',
+                                  width = 3)))
+
+figlec <- figlec %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figlec
+```
+
+```{r}
+#| title: Practicas religiosas
+#| echo: false
+
+reli<-(data.frame(table(Tabla1$CARCEL_RELIGION)))
+reli$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(reli)<-c("Respuesta","Freq")
+figreli <- plot_ly(reli, x = reli[["Freq"]], y = reli[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figreli <- figreli %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figreli
+```
+
+```{r}
+#| title: Llamadas
+#| label: llamadas
+#| echo: false
+
+llam<-(data.frame(table(Tabla1$CARCEL_LLAMADAS)))
+llam$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(llam)<-c("Respuesta","Freq")
+figllam <- plot_ly(llam, x = llam[["Freq"]], y = llam[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(174, 139, 45, 0.6)',
+                      line = list(color = 'rgba(174, 139, 45, 1.0)',
+                                  width = 3)))
+
+figllam <- figllam %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figllam
+```
+
+```{r}
+#| title: Estudiar
+#| label: EstudioCarcel
+#| echo: false
+
+carestu<-(data.frame(table(Tabla1$CARCEL_ESTUDIO)))
+carestu$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(carestu)<-c("Respuesta","Freq")
+figcarestu <- plot_ly(carestu, x = carestu[["Freq"]], y = carestu[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = "rgba(85, 26, 139, 0.6)",
+                      line = list(color = '"rgba(85, 26, 139, 1.0)"',
+                                  width = 3)))
+
+figcarestu <- figcarestu %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figcarestu
+```
+
+```{r}
+#| title: Visitas
+#| echo: false
+
+visit<-(data.frame(table(Tabla1$CARCEL_VISITA)))
+visit$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(visit)<-c("Respuesta","Freq")
+figvisit <- plot_ly(visit, x = visit[["Freq"]], y = visit[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = 'rgba(14, 38, 53, 0.6)',
+                      line = list(color = 'rgba(14, 38, 53, 1.0)',
+                                  width = 3)))
+
+figvisit <- figvisit %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figvisit
+```
+
+```{r}
+#| title: Sentirse seguro
+#| label: carcelseguridad
+#| echo: false
+
+carcelseguridad<-(data.frame(table(Tabla1$CARCEL_SEGURIDAD)))
+carcelseguridad$Var1<-c("Si","No", "No sabe", "No responde")
+colnames(carcelseguridad)<-c("Respuesta","Freq")
+figcarcelseguridad <- plot_ly(carcelseguridad, x = carcelseguridad[["Freq"]], y = carcelseguridad[["Respuesta"]], type = 'bar', orientation = 'h', 
+                     marker = list(color = "rgba(85, 26, 139, 0.6)",
+                      line = list(color = '"rgba(85, 26, 139, 1.0)"',
+                                  width = 3)))
+
+figcarcelseguridad <- figcarcelseguridad %>% layout(barmode = 'stack',
+         xaxis = list(title = ""),
+         yaxis = list(title =""))
+
+figcarcelseguridad
+```
+
+## Comentarios {height="30%"}
+
+::: card
+**Observaciones** Las variables cuantitativas de esta sección son asimétricas, pero no poseen tendencia al valor 0. Sin embargo, las variables categóricas de esta sección estan inclinadas fuertemente hacia una categoría (a excepción de la variable "Visitas")
+
+Por lo tanto, se dará un mayor enfoque y desarrollo a las variables cuantitativas de esta sección.
+:::

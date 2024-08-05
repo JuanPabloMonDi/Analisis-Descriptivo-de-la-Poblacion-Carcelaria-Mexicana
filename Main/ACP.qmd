@@ -1,0 +1,416 @@
+---
+title: "Análisis de Componentes Principales"
+format: html
+editor: visual
+---
+
+Para el desarrollo del análisis de componentes principales del conjunto de datos se utilizarán los paquetes de $\texttt{FactoMineR,ade4,FactoClass}$ y $\texttt{factoextra}$. Si bien puede ser redundante el uso de estos 4 paquetes en el mismo código, cada uno de estos ofrece funciones que nos ayudaran a dar una mejor representación gráfica de los resultados obtenidos por el ACP.
+
+De esta forma, se usaran los siguientes paquetes para la ejecución del código.
+
+```{r}
+#| label: carga-librerias
+#| message: false
+#| echo: true
+#| output: false
+
+#Manejo de datos
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(readxl)
+#Gráficos
+library(ggplot2)
+library(plotly)
+library(GGally)
+#ACP
+library(ade4)
+library(FactoClass)
+library(FactoMineR)
+library(factoextra)
+#Datos importados
+source("DatosSeleccionados.R")
+
+#Ajustes de tema del documento y graficos
+library(scales)
+library(DT)
+library(gt)
+library(RColorBrewer)
+theme_set(theme_minimal(base_size = 24, base_family = "Atkinson Hyperlegible"))
+library(hrbrthemes)
+```
+
+# 1. ACP de todas las variables.
+
+Seleccionamos las variables de tipo cuantitativo de nuestra base de datos, en caso de que el lector no las recuerde, pueden ser consultadas [aquí](Datos.qmd).
+
+Ahora, como primer paso, observamos las correlaciones que posee nuestro conjunto de datos a través de su matriz de correlaciones.
+
+```{r}
+#| label: Seleccion-variables
+#| echo: false
+#| warning: false
+#| output: false
+#http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/#r-packages
+#Escogemos las variables cuantitativas
+varCuantitativas<-c("EDAD","NUM_HIJOS","EDAD_CONSUMO_TABACO","EDAD_CONSUMO_ALCOHOL","EDAD_CONSUMO_MARIHUANA","EDAD_CONSUMO_INHALABLES","EDAD_CONSUMO_LSD","EDAD_CONSUMO_HONGOS","EDAD_CONSUMO_COCAINA","EDAD_CONSUMO_PASTA_COCAINA","EDAD_CONSUMO_CRACK","EDAD_CONSUMO_HEROINA","EDAD_CONSUMO_CHOCHOS","EDAD_CONSUMO_TRANQUILIZANTES","EDAD_CONSUMO_ANFETAMINAS","N_PERSONAS_DEPENDIENTES","DINERO_SOBORNO","DELITOS_ABIERTOS","TIEMPO_RECLUIDO","TIEMPO_PROCESO","CANTIDAD_PERSONAS_CELDA","CELDA_HORAS","VECES_SENTENCIADO")
+
+varCualitativas<-setdiff(colnames(Tabla1),c("ID_PER","NOM_ENT",varCuantitativas))
+
+DatosCuantitativos<-Tabla1[,varCuantitativas]
+DatosCualitativos<-Tabla1[,varCualitativas]
+correlaciones<-cor(DatosCuantitativos)
+```
+
+## Matriz de correlación
+
+::: {style="display: flex;"}
+::: {style="flex: 1; padding: 7px;"}
+```{r}
+#| label: Correlaciones
+#| title: Correlaciones
+#| echo: false
+#| warning: false
+
+#http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/#r-packages
+
+correlaciones<-cor(DatosCuantitativos)
+#correlaciones<-correlaciones[rev(colnames(correlaciones)),]
+TabCorrelaciones<-NULL
+for (var1 in colnames(correlaciones)){
+  for (var2 in rownames(correlaciones)){
+    fila<-data.frame(variable1=var1,variable2=var2,correlacion=correlaciones[var1,var2])
+    TabCorrelaciones<-rbind(TabCorrelaciones,fila)
+  }
+}
+TabCorrelaciones<-TabCorrelaciones%>%
+  mutate(text = paste0("x: ", TabCorrelaciones$variable1, "\n", "y: ", TabCorrelaciones$variable2, "\n", "Correlacion:",round(correlacion,4)))
+
+options(repr.plot.width =7, repr.plot.height=1)
+
+p <- ggplot(TabCorrelaciones, aes(variable1, variable2, fill= correlacion, text=text)) + labs(x="",y="")+
+  geom_tile() +scale_fill_gradient2(low=muted("blue2"),mid="white", high=muted("#F00505"),limits=c(-1,1))+
+  theme_ipsum()+theme(
+    #axis.text.x=element_text(angle = -90, hjust = 0),
+        axis.ticks.x=element_blank(), #remove x axis ticks
+        axis.ticks.y=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank()
+        )  #remove y axis ticks
+
+#par(mar = c(4, 3, 3, 2.5) + 0.1)
+par(fin=c(1,1))
+#par(mai = c(4, 3, 3, 2.5) + 0.1)
+ggplotly(p, tooltip="text")
+par(fin=c(1,1))
+#heatmap(correlaciones,NA,NA)
+```
+:::
+
+::: {style="flex: 1; padding: 10px;"}
+<font size ="3">
+
+La matriz de correlaciones nos da indicios de la posible relación entre las variables, las cuales se resumen en las siguientes:
+
+</font>
+
+<font size ="2">
+
+-   Las variables que corresponden a la edad a la cual comenzaron a consumir alguna droga o sustancia (Tabaco, alcohol, marihuana, cocaína,...) se encuentran altamente relacionadas.
+
+-   Las variables de TIEMPO_RECLUIDO y TIEMPO_PROCESO, y NUM_HIJOS y N_PERSONAS_DEPENDIENTES se encuentran relacionadas, esto tiene sentido dentro del contexto lógico de lo que representa cada una de estas variables.
+
+-   Las demás variables son independientes, o muy poco relacionadas, entre ellas.
+
+    </font>
+
+Así, se puede esperar que el ACP resultantes tenga a las variables correspondientes a las edades como principales representantes de su primer eje.
+:::
+:::
+
+Ahora, construiremos el ACP utilizando las funciones `dudi.pca` de `ade4` y `PCA` de `FactoMineR` . Pese a que ambas funciones dan el mismo resultado, los paquetes asociados a estas funciones nos dan alternativas para graficar los resultados obtenidos.
+
+## ACP
+
+```{r}
+#| title: ACP de las variables cuantitativas
+#| echo: True
+#| output: True
+
+res.pca<-FactoMineR:: PCA(DatosCuantitativos, scale.unit = TRUE, ncp = 20, graph = FALSE)
+acp <- dudi.pca(DatosCuantitativos, scannf = FALSE, nf = 5) 
+
+# El parámetro nf indica cuantos ejes voy a conservar
+valp <- t(inertia(acp)$tot.inertia) # valores propios
+kable(valp, digits = 3)
+```
+
+::: {style="height: 10%;"}
+Como resultado inicial del ACP, se tiene que los 2 primeros ejes capturan un 24.84% de la varianza dada por las variables. Sin embargo, los otros ejes capturan aproximadamente un 5% de varianza, (ver gráfico izquierda); Por lo tanto no es posible resumir de forma drástica la dimensionalidad de la información dada por las variables, lo que puede interpretarse como independencia entre estas.
+
+Esta proposición puede confirmarse a través de los valores propios obtenidos (derecha), donde se obtuvieron 9 valores mayores o iguales a 1, y un total de 13 valores propios cercanos a 1 (mayores a 0.8).
+:::
+
+::: {style="height: 20%;"}
+::: {layout-ncol="2"}
+**Varianza explicada por los ejes**
+
+**Valores propios**
+
+```{r}
+#| label: Varianza explicada por los ejes
+#| echo: false
+
+#get_eigenvalue(res.pca)# Extract the eigenvalues/variances of principal components
+fviz_eig(res.pca,addlabels=T,ylim=c(0,20),ylab = "Porcentaje de varianza explicada",xlab="Eje",main="")# Visualize the eigenvalues
+```
+
+```{r}
+#| label: Valores propios
+#| echo: false
+
+#par(mar = c(2.5, 1, 1, 1.5) + 0.1)
+vline <- function(x = 0, color = "green") {
+  list(
+    type = "line",
+    y0 = 0,
+    y1 = 1,
+    yref = "paper",
+    x0 = x,
+    x1 = x,
+    line = list(color = color, dash="dot")
+  )
+}
+# histograma de valores propios
+plot_ly(y=1:length(acp$eig),x=acp$eig,type="bar",orientation="h")%>%layout(plot_bgcolor = "#e5ecf6", shapes = list(vline(1), list(type = "rect",
+                                        fillcolor = "red", opacity = 0.2,
+                                        x0 = 0.8, x1 = max(acp$eig)+0.2, y0 = -0.5, y1 = 24)))
+#par(mar = c(5, 4, 4, 2) + 0.1)
+#abline(v = 1, lty = 3)
+#kable(acp$co, digits = 3)
+#s.corcircle(acp$co)
+#plot(acp, Tcol = FALSE, gg = TRUE)
+#fig<-ggplotly(p,tooltip = "text")
+#fig
+#9 ejes
+#acp1 <- dudi.pca(DatosCuantitativos, scannf = FALSE, nf = 9) 
+#s.corcircle(acp1$co, xax = 5, yax = 8)
+```
+:::
+:::
+
+## Fila 4
+
+Proin eu porttitor felis. Vivamus pulvinar augue at auctor efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus ullamcorper bibendum lacinia. Ut sodales auctor nunc sit amet pretium. Cras semper vulputate est a tincidunt. Etiam commodo sapien nec augue rhoncus, eget accumsan lorem efficitur.
+
+::: panel-tabset
+## Esta
+
+```{r}
+#| label: biplot
+#| echo: false
+
+fviz_pca_biplot(res.pca,geom="point")
+```
+
+## y esta
+
+```{r}
+#| label: individuos
+#| echo: false
+
+fviz_pca_ind(res.pca,geom="point")
+#kable(acp$co, digits = 3)
+#s.corcircle(acp$co)
+#plot(acp, Tcol = FALSE, gg = TRUE)
+
+#9 ejes
+#acp1 <- dudi.pca(DatosCuantitativos, scannf = FALSE, nf = 9) 
+#s.corcircle(acp1$co, xax = 5, yax = 8)
+#s.corcircle(acp1$co, xax = 6, yax = 7)
+```
+:::
+
+## Cos2
+
+::: panel-tabset
+## 1° eje
+
+```{r}
+#| title: Primer eje
+#| echo: false
+fviz_cos2(res.pca, choice = "var", axes = 1)
+```
+
+## 2° eje
+
+```{r}
+#| title: Segundo eje
+#| echo: false
+fviz_cos2(res.pca, choice = "var", axes = 2)
+```
+
+## 3° eje
+
+```{r}
+#| title: Tercer eje
+#| echo: false
+fviz_cos2(res.pca, choice = "var", axes = 3)
+```
+
+## 4° eje
+
+```{r}
+#| title: Cuarto eje
+#| echo: false
+fviz_cos2(res.pca, choice = "var", axes = 4)
+```
+
+## 5° eje
+
+```{r}
+#| title: Quinto eje
+#| echo: false
+fviz_cos2(res.pca, choice = "var", axes = 5)
+```
+
+## 6° eje
+
+```{r}
+#| title: Sexto eje
+#| echo: false
+fviz_cos2(res.pca,choice="var",axes=6)
+```
+
+## 7° eje
+
+```{r}
+#| title: Septimo eje
+#| echo: false
+fviz_cos2(res.pca,choice="var",axes=7)
+```
+
+## 8° eje
+
+```{r}
+#| title: Octavo eje
+#| echo: false
+fviz_cos2(res.pca,choice="var",axes=8)
+```
+
+## 9° eje
+
+```{r}
+#| title: Noveno eje
+#| echo: false
+fviz_cos2(res.pca,choice="var",axes=9)
+```
+:::
+
+## Contribución de cada variable a los ejes
+
+::: panel-tabset
+## 1° eje
+
+```{r}
+#| title: Primer eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=1)
+```
+
+## 2° eje
+
+```{r}
+#| title: Segundo eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=2)
+```
+
+## 3° eje
+
+```{r}
+#| title: Tercer eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=3)
+```
+
+## 4° eje
+
+```{r}
+#| title: Cuarto eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=4)
+```
+
+## 5° eje
+
+```{r}
+#| title: Quinto eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=5)
+```
+
+## 6° eje
+
+```{r}
+#| title: Sexto eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=6)
+```
+
+## 7° eje
+
+```{r}
+#| title: Septimo eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=7)
+```
+
+## 8° eje
+
+```{r}
+#| title: Octavo eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=8)
+```
+
+## 9° eje
+
+```{r}
+#| title: Noveno eje
+#| echo: false
+fviz_contrib(res.pca,top=5,choice="var",axes=9)
+```
+:::
+
+Quisque sollicitudin vel massa ac scelerisque. Morbi non porttitor nisl. Curabitur iaculis, lectus in condimentum pharetra, massa ligula vulputate sapien, in tincidunt enim dolor a massa. Donec convallis velit in lacus ornare porta. Duis ac erat sed purus maximus faucibus vestibulum vitae nisi. Maecenas euismod sem lacus, sit amet eleifend purus consectetur ac. Ut imperdiet suscipit nisl eget suscipit. Etiam sollicitudin porta sem at sodales. Nam condimentum augue sed magna auctor, non ornare arcu pellentesque. Suspendisse malesuada nisi sit amet sapien facilisis, ac porttitor sem bibendum. Mauris lacinia purus vel rutrum pretium. Duis aliquet a nibh vitae dignissim. Vestibulum sit amet odio ac velit sodales mollis quis non elit. Fusce et porta dui, condimentum facilisis lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+## PCA 1 {height= "30%"}
+
+```{r}
+#| title: Otros eje
+#| echo: false
+#fviz_contrib(res.pca, choice = "var", axes = 1:2, top = 10)
+#fviz_contrib(res.pca, choice = "var", axes = 1:3, top = 10)
+#get_pca_ind(res.pca)# get_pca_var(res.pca): Extract the results for individuals and variables, respectively.
+#fviz_pca_ind(res.pca)#, fviz_pca_var(res.pca): Visualize the results individuals and variables, respectively.
+#fviz_pca_biplot(res.pca)#: Make a biplot of individuals and variables.
+
+
+fviz_pca_var(res.pca, col.var = "contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07")
+             )
+
+# Change the transparency by contrib values
+#fviz_pca_var(res.pca, alpha.var = "contrib")
+#Dejar las drogas como ilustrativas, Qiutar las drogas y reducirla a una sola variable
+
+#Consumo_Marihuana
+#fviz_pca_ind(res.pca,
+#             geom.ind = "point", # show points only (nbut not "text")
+#             col.ind = Tabla1$CONSUMO_HONGOS, # color by groups
+             #palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+#             addEllipses = TRUE, # Concentration ellipses
+#             legend.title = "Groups"
+#             )
+```
