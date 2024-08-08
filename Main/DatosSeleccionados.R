@@ -168,6 +168,7 @@ Tabla1 <- Tabla1[Variables] %>%
                EDAD_CONSUMO_TRANQUILIZANTES=as.numeric(EDAD_CONSUMO_TRANQUILIZANTES),
                EDAD_CONSUMO_ANFETAMINAS=as.numeric(EDAD_CONSUMO_ANFETAMINAS))
 
+Tabla1[is.na(Tabla1["EDAD_ESCOLARIDAD"]),]["EDAD_ESCOLARIDAD"]<-0
 Tabla1[is.na(Tabla1["NUM_HIJOS"]),]["NUM_HIJOS"]<-0
 Tabla1[is.na(Tabla1["EDAD_CONSUMO_TABACO"]),]["EDAD_CONSUMO_TABACO"]<-99#mean(na.omit(Tabla1$EDAD_CONSUMO_TABACO))
 Tabla1[is.na(Tabla1["EDAD_CONSUMO_ALCOHOL"]),]["EDAD_CONSUMO_ALCOHOL"]<-99#mean(na.omit(Tabla1$EDAD_CONSUMO_ALCOHOL))

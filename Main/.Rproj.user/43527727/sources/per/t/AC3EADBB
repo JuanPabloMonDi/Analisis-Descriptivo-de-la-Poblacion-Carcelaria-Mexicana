@@ -3,7 +3,7 @@
     "path": "~/GitHub/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/Main/ACP.qmd",
     "project_path": "ACP.qmd",
     "type": "quarto_markdown",
-    "hash": "1589075482",
+    "hash": "2573076107",
     "contents": "",
     "dirty": false,
     "created": 1722869621548.0,
@@ -16,16 +16,16 @@
         "Source": "Source",
         "docOutlineVisible": "1",
         "rmdVisualCollapsedChunks": "",
-        "rmdVisualModeLocation": "5941:4268",
+        "rmdVisualModeLocation": "82:0",
         "cursorPosition": "153,26",
-        "scrollLine": "151"
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1722877971,
+    "lastKnownWriteTime": 1723093765,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1722877971307,
+    "last_content_update": 1723093765858,
     "read_only": false,
     "read_only_alternatives": []
 }

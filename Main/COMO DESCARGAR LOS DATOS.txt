@@ -8,9 +8,9 @@ deslizando por la página web, hay una sección dónde descargar la base de dato
 
 2. Va a descargarse un archivo zip con el nombre bd_enpol_2021_csv. Extraemos ese archivo DENTRO de la carpeta ENCUESTA CARCELES INEGI 2021.
 
-3. Para confirmar, la ruta de dónde estaran los archivos csv debe ser "Encuesta Carceles INEGI 2021/bd_enpol_2021_csv/" 
+3. Para confirmar, la ruta de dónde estarán los archivos csv debe ser "Encuesta Carceles INEGI 2021/bd_enpol_2021_csv/" 
 
-Si esto se hace tal como se ha dicho, no deberia haber problema para importar la base de datos. Esto es importante pues el código utilizado es el siguiente
+Si esto se hace tal como se ha dicho, no debería haber problema para importar la base de datos. Esto es importante pues el código utilizado es el siguiente
 
 read_csv("Encuesta Carceles INEGI 2021/bd_enpol_2021_csv/ENPOL2021_SOC.csv")
 
