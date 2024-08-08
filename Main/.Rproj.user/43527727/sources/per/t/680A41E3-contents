@@ -38,7 +38,7 @@ ui <- fluidPage(
                                 accordion_panel(
                                   "Resumen",
                                   HTML(
-                                    "<p>&#8226; <a href='https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/ResumenIntro.html' target='_blank'> Resumen</a></p>"
+                                    "<p>&#8226; Resumen</p>"
                                   ),
                                 )
                               ),
@@ -46,9 +46,10 @@ ui <- fluidPage(
                                 accordion_panel(
                                   "Marco Conceptual",
                                   HTML(
-                                    "<p>&#8226; <a href='https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/Antecedentes.html' target='_blank'>Marco de Antecedentes</a></p>
-     <p>&#8226; <a href='https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/' target='_blank'>Objetivos y Justificación</a></p>
-     <p>&#8226; <a href='https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/Datos.html' target='_blank'>Descripción de los datos</a></p>"
+                                    "<p>&#8226; Marco de Antecedentes</p>
+                                <p>&#8226; Objetivos y Justificación</p>
+                                 <p>&#8226; Descripción de los datos</p>"
+
                                   )
                                 )
                               ),
@@ -56,17 +57,16 @@ ui <- fluidPage(
                                 accordion_panel(
                                   "Análisis Descriptivo",
                                   HTML(
-                                    "<p>&#8226; <a href='https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/dashboard.html' target='_blank'>Análisis Descriptivo Univariado</a></p>
-   <p>&#8226; <a href='https://qglhmj-juan0pablo-montano0diaz.shinyapps.io/analisis_descriptivo_bivariado/' target='_blank'>Análisis Descriptivo Bivariado</a></p>
-   <p>&#8226; <a href='https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/ACP.html' target='_blank'>Análisis de Componentes Principales (PCA)</a></p>"
+                                    "<p>&#8226; Análisis Descriptivo Univariado</p>
+                                <p>&#8226; Análisis Descriptivo Bivariado </p>
+                                 <p>&#8226; Análisis de Componentes Principales (PCA)</p>"
                                   )
-                                  
                                 )
                               ),
                               accordion(open = F,
                                 accordion_panel("Sobre nosotros",
                                                 HTML(
-                                                  "<p>&#8226; <a href='https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/about.html' target='_blank'> Sobre Nosotros</a></p> "
+                                                  "<p>&#8226; Sobre Nosotros</p> "
                                                 )
                                                 )
                               )
