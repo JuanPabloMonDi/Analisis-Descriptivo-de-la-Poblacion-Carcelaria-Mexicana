@@ -1,0 +1,3 @@
+"0","#| title: Sexto eje"
+"0","#| echo: false"
+"0","fviz_cos2(res.pca,choice=""var"",axes=6)"

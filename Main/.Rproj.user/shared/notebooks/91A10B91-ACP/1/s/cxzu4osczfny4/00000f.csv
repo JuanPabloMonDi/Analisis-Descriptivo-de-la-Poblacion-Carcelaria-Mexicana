@@ -1,0 +1,3 @@
+"0","#| echo: false"
+"0","plot(acp, Tcol = FALSE, ucal = 100, cex.row = 0,"
+"0","     xlim = c(min(sup$coor[11:12,]-0.2),1), ylim = c(-1, 1), plot.axes = FALSE)"

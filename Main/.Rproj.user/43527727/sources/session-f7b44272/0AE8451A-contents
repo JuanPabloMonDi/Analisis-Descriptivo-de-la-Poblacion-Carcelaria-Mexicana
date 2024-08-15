@@ -1,0 +1,109 @@
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(readxl)
+#Gráficos
+library(ggplot2)
+library(plotly)
+library(GGally)
+#ACP
+library(ade4)
+library(FactoClass)
+library(FactoMineR)
+library(factoextra)
+indices <- read_excel("~/indices.xlsx")
+indices2<-indices
+
+
+#Emergia es el tiempo que toma consumor
+#Tiempo emergetico negativo o positivos, pa cuantos años me alcanza esta energia
+#Si comenzara de 0, cuantos años tienen que pasar para alcanzar lo que tengo.
+
+
+#Entradas culturales<- coss tangibles
+#Entradas ecosistemicas <- energia eolica
+indices<-indices2
+DatosCuantitativos<-indices[c(3:12,17,19:45,47)]
+#Algunas variables fuerond descartadas por que son el mismo valor para todas las fincas
+a<-cor(DatosCuantitativos)
+heatmap(a,NA,NA)
+
+
+res.pca<-FactoMineR:: PCA(DatosCuantitativos, scale.unit = TRUE, ncp = 20, graph = FALSE)
+acp <- dudi.pca(DatosCuantitativos, scannf = FALSE, nf = 15) 
+
+# El parámetro nf indica cuantos ejes voy a conservar
+valp <- t(inertia(acp)$tot.inertia) # valores propios
+
+fviz_eig(res.pca,addlabels=T,ylim=c(0,50),ylab = "Porcentaje de varianza explicada",xlab="Eje",main="")
+
+
+#par(mar = c(2.5, 1, 1, 1.5) + 0.1)
+vline <- function(x = 0, color = "green") {
+  list(
+    type = "line",
+    y0 = 0,
+    y1 = 1,
+    yref = "paper",
+    x0 = x,
+    x1 = x,
+    line = list(color = color, dash="dot")
+  )
+}
+# histograma de valores propios
+plot_ly(y=1:length(acp$eig),x=acp$eig,type="bar",orientation="h")%>%layout(plot_bgcolor = "#e5ecf6", shapes = list(vline(1), list(type = "rect",
+                                                                                                                                  fillcolor = "red", opacity = 0.2,
+                                                                                            x0 = 0.8, x1 = max(acp$eig)+0.2, y0 = -0.5, y1 = 24)))
+#Calidad de representación
+fviz_cos2(res.pca, choice = "var", axes = 1)
+
+#Planos factoriales
+fviz_pca_var(res.pca,axes=c(1,2), col.var = "contrib",gradient.cols = c("#FFFFFF", "#E7B800","#08306B"))
+
+
+#Proyección de los individuos
+fviz_pca_ind(res.pca,col.ind="cos2",geom=c("text","point"),axes=c(1,2)) +
+  scale_color_gradient2(low="blue", mid="white", 
+                        high="red", midpoint=0.50)+
+  theme_minimal()
+
+
+fviz_pca_ind(res.pca,
+             axes=c(1,3),
+             geom.ind = "point", # show points only (nbut not "text")
+             col.ind = indices$GRUPO, # color by groups
+             palette = c("#00AFBB", "#E7B800","#FC4E07","red","black"),
+             addEllipses = TRUE, # Concentration ellipses
+             legend.title = "Groups"
+)
+
+Ysupcat<-indices[,"GRUPO"]
+Ysupcat[]<-lapply(Ysupcat,as.factor)
+Ysupcat<-as.data.frame(Ysupcat)
+sup<-supqual(acp,Ysupcat)
+
+#Pesos y distancias
+pes_dist_coor<-cbind(wcat = sup$wcat, d2 = sup$dis2, sup$coor)
+
+#Valores test
+test_cos<-cbind(sup$tv, sup$cos2)
+
+
+#corrientes de extensión rural - Tesis
+#A- Control
+#Orientado a incrementar la producción -B
+
+#Campacitación humana -C
+#Transferencia tecnologica -D
+
+
+
+#Separó los positivos de los negativos
+#Grafico
+plot(acp, Tcol = FALSE, ucal = 100, cex.row = 0,
+     xlim = c(min(sup$coor-0.2),1), ylim = c(-max(sup$coor+0.2), max(sup$coor+0.2)), plot.axes = T)
+#s.arrow(acp$co, add.plot = TRUE, boxes = F)
+points(sup$coor[,c(1,2)], col = 6, pch = 16)
+text(sup$coor[1:4,c(1,2)], labels = rownames(sup$coor),
+     col = 6, pos = 1, font = 3, srt=-45)
+
