@@ -1,0 +1,3 @@
+"0","#| echo: false"
+"0","test_cos<-cbind(sup$tv, sup$cos2)"
+"0","kable(head(test_cos[31:42,]), digits = 3)"

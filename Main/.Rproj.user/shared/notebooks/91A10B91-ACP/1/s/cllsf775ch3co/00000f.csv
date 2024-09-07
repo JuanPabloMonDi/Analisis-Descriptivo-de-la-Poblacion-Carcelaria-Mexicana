@@ -1,0 +1,6 @@
+"0","#| title: ACP2 Ejes 1-2"
+"0","#| echo: false"
+"0",""
+"0","plot.PCA(res.pca2,choix='var',habillage = 'contrib',cex=0.6,cex.main=0.9,cex.axis=0.9,axes = c(1,2))"
+"2","Erro: objeto 'res.pca2' não encontrado
+"

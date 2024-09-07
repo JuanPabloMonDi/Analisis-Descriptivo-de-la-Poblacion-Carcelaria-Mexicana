@@ -1,0 +1,5 @@
+"0","#| label: varianza ACP3"
+"0","#| echo: false"
+"0",""
+"0","fviz_eig(res.pca3,addlabels=T,ylim=c(0,35),ylab = ""Porcentaje de varianza explicada"",xlab=""Eje"",main="""")"
+"0",""
