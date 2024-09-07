@@ -1,0 +1,7 @@
+"0","#| label: Tabla-disyuntiva-completa1"
+"0","#| echo: false"
+"0","#| warning: false"
+"0","#| output: false"
+"0","DatosCualitativos <- data.frame(lapply(DatosCualitativos, as.factor))"
+"0",""
+"0","Z <- acm.disjonctif(DatosCualitativos) # función de ade4"

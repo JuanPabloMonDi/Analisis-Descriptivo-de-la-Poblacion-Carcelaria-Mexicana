@@ -587,5 +587,71 @@
       "Marco conceptual",
       "Objetivos y justificación"
     ]
+  },
+  {
+    "objectID": "ACS.html",
+    "href": "ACS.html",
+    "title": "Análisis de Correspondencias Simples",
+    "section": "",
+    "text": "Convertimos alguas variables en categóricas mediante discretización",
+    "crumbs": [
+      "Análisis descriptivo",
+      "Análisis de Correspondencias Multples (MCA)"
+    ]
+  },
+  {
+    "objectID": "ACS.html#acm-de-variables-sociodemográficas",
+    "href": "ACS.html#acm-de-variables-sociodemográficas",
+    "title": "Análisis de Correspondencias Simples",
+    "section": "ACM de Variables Sociodemográficas",
+    "text": "ACM de Variables Sociodemográficas",
+    "crumbs": [
+      "Análisis descriptivo",
+      "Análisis de Correspondencias Multples (MCA)"
+    ]
+  },
+  {
+    "objectID": "ACS.html#acm-de-variables-economicas",
+    "href": "ACS.html#acm-de-variables-economicas",
+    "title": "Análisis de Correspondencias Simples",
+    "section": "ACM de Variables economicas",
+    "text": "ACM de Variables economicas",
+    "crumbs": [
+      "Análisis descriptivo",
+      "Análisis de Correspondencias Multples (MCA)"
+    ]
+  },
+  {
+    "objectID": "ACS.html#acm-de-variables-delictivas",
+    "href": "ACS.html#acm-de-variables-delictivas",
+    "title": "Análisis de Correspondencias Simples",
+    "section": "ACM de Variables delictivas",
+    "text": "ACM de Variables delictivas",
+    "crumbs": [
+      "Análisis descriptivo",
+      "Análisis de Correspondencias Multples (MCA)"
+    ]
+  },
+  {
+    "objectID": "ACS.html#acm-de-vida-intracarcelaria",
+    "href": "ACS.html#acm-de-vida-intracarcelaria",
+    "title": "Análisis de Correspondencias Simples",
+    "section": "ACM de Vida Intracarcelaria",
+    "text": "ACM de Vida Intracarcelaria",
+    "crumbs": [
+      "Análisis descriptivo",
+      "Análisis de Correspondencias Multples (MCA)"
+    ]
+  },
+  {
+    "objectID": "ACS.html#acm-de-expectativas-de-salida",
+    "href": "ACS.html#acm-de-expectativas-de-salida",
+    "title": "Análisis de Correspondencias Simples",
+    "section": "ACM de Expectativas de Salida",
+    "text": "ACM de Expectativas de Salida",
+    "crumbs": [
+      "Análisis descriptivo",
+      "Análisis de Correspondencias Multples (MCA)"
+    ]
   }
 ]

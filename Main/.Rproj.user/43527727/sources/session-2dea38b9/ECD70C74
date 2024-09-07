@@ -1,0 +1,32 @@
+{
+    "id": "ECD70C74",
+    "path": "~/GitHub/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/Main/ACS.qmd",
+    "project_path": "ACS.qmd",
+    "type": "quarto_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1724941855039.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "876,0",
+        "scrollLine": "872",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "649:510"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1725679936,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1725679936930,
+    "read_only": false,
+    "read_only_alternatives": []
+}
