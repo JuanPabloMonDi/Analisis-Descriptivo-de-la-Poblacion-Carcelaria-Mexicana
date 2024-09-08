@@ -1,6 +1,0 @@
-"0","#| label: MCA1"
-"0","#| echo: true"
-"0","#| output: false"
-"0","acm <- MCA(DatosCualitativos, graph=FALSE)"
-"0",""
-"0","acm_ventil<-MCA(DatosCualitativos,graph = FALSE,level.ventil = 0.01)"
