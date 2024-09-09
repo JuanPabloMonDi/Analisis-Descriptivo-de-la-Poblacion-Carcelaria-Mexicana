@@ -1,0 +1,2 @@
+"0","text(sup$coor[309:312,], labels = rownames(sup$coor[309:312,]),"
+"0","     col = 6, pos = 1, font = 3, srt=-45)"

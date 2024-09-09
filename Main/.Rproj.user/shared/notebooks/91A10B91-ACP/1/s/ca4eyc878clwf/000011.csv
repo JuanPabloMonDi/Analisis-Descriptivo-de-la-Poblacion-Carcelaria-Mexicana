@@ -1,0 +1,4 @@
+"0","#| echo: false"
+"0","pes_dist_coor<-cbind(wcat = sup$wcat, d2 = sup$dis2, sup$coor)"
+"0","kable(pes_dist_coor[277:280,], "
+"0","      digits = 3)"

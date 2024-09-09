@@ -1,3 +1,2 @@
-"0","#| echo: false"
-"0","test_cos<-cbind(sup$tv, sup$cos2)"
-"0","kable(head(test_cos[308:311,]), digits = 3)"
+"0","#s.arrow(acp$co, add.plot = TRUE, boxes = F)"
+"0","points(sup$coor[309:312,], col = 6, pch = 16)"

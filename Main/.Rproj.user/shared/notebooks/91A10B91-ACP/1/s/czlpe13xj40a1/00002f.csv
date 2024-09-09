@@ -1,9 +1,0 @@
-"0","#| echo: false
-plot(acp, Tcol = FALSE, ucal = 100, cex.row = 0,
-     xlim = c(min(sup$coor[308:311,]-0.2),1), ylim = c(-1, 1), plot.axes = FALSE)
-#| echo: false
-plot(acp, Tcol = FALSE, ucal = 100, cex.row = 0,
-     xlim = c(min(sup$coor[308:311,]-0.2),1), ylim = c(-1, 1), plot.axes = FALSE)
-"
-"0","#s.arrow(acp$co, add.plot = TRUE, boxes = F)"
-"0","points(sup$coor[308:311,], col = 6, pch = 16)"

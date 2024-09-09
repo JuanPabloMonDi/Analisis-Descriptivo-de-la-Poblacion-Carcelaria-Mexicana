@@ -1,1 +1,0 @@
-{"frames":[{"func":"plot.PCA(res.pca2, choix = \"var\", habillage = \"contrib\", cex = 0.6, \n    cex.main = 0.9, cex.axis = 0.9, axes = c(1, 3))","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Erro: objeto 'res.pca2' não encontrado\n"}

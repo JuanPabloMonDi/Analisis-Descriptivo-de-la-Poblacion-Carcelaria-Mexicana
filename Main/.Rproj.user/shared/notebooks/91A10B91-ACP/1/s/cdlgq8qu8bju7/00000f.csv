@@ -1,0 +1,5 @@
+"0","#| echo: false"
+"0","Ysupcat<-Tabla1[setdiff(varCualitativas,c(""ANOS_CONDENA"",""ANOS_PROCESO"",""MESES_CONDENA"",""MESES_PROCESO""))]"
+"0","Ysupcat[]<-lapply(Ysupcat,as.factor)"
+"0","Ysupcat<-as.data.frame(Ysupcat)"
+"0","sup<-supqual(acp,Ysupcat)"

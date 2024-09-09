@@ -1,0 +1,6 @@
+"0","#| fig-cap: ''"
+"0","#| fig-align: 'center'"
+"0","#| fig-width: 5.5"
+"0","#| fig-height: 5"
+"0","#| echo: false"
+"0","fviz_mca_ind(acm, axes=c(2,3), geom=""point"", asp=1, col.ind = ""cos2"",ggtheme=theme_minimal())"

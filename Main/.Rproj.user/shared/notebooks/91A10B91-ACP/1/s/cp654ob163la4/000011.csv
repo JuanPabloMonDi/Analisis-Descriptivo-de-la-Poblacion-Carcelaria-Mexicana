@@ -1,7 +1,0 @@
-"0","#| label: individuos23"
-"0","#| echo: false"
-"0",""
-"0","fviz_pca_ind(res.pca,col.ind=""cos2"",geom=""point"",axes=c(2,3)) +"
-"0","scale_color_gradient2(low=""blue"", mid=""white"", "
-"0","                      high=""red"", midpoint=0.50)+"
-"0","  theme_minimal()"
