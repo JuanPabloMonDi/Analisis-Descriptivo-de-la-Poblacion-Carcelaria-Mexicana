@@ -1,0 +1,7 @@
+"0","#| fig-cap: ''"
+"0","#| fig-align: 'center'"
+"0","#| fig-width: 5.5"
+"0","#| fig-height: 5"
+"0","#| echo: false"
+"0","fviz_mca_var_interactive(acmSoc,col.var = ""cos2"", gradient.cols = c(""#00AFBB"", ""#E7B800"", ""#FC4E07""), "
+"0","             axes=c(4,3), repel = TRUE,  ggtheme=theme_minimal(),quali.col = ""black"")"

@@ -36,7 +36,7 @@ Es decir, el diseño muestral considera a toda la población mayor de 18 años q
 
 Además del diseño muestral, es posible ver el cronograma de la encuesta en el Informe Operativo[^2]. Gracias a este documento, es posible saber que el periodo de levantamiento de los datos fue llevado a cabo entre el 14 de junio y el 26 de julio del 2021.
 
-[^2]: [Encuesta Nacional de la Población Privada de la Libertad (ENPOL) 2021. Informe Operativo](https://www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/nueva_estruc/889463903666.pdf). Instituto Nacional de Estadística y Geografía.
+[^2]: [Encuesta Nacional de la Población Privada de la Libertad (ENPOL) 2021. Informe Operativo](https://www.inegi.org.mx/app/biblioteca/ficha.html?upc=889463903666). Instituto Nacional de Estadística y Geografía.
 
 Por último, la unidad del muestreo (de donde se obtuvo la información), fueron directamente las personas reclusas en los centros penitenciarios. El tamaño de muestra utilizado para la encuesta fue de 67584 internos, distribuidos en 55535 hombres (82.17%) y 12049 mujeres (17.83%) distribuidos de forma estratificada a lo largo del territorio mexicano. Este tamaño de muestra fue calculado a partir de un nivel de confianza de 90%.
 
@@ -662,6 +662,6 @@ diccionario%>%
 ```
 :::
 
-Si se desea saber el significado de cada uno de los valores dados en la tabla, el lector puede dirigirse al [descriptor de archivos](https://www.inegi.org.mx/contenidos/programas/enpol/2021/microdatos/fd_enpol2021.pdf) dado por el INEGI[^2].
+Si se desea saber el significado de cada uno de los valores dados en la tabla, el lector puede dirigirse al [descriptor de archivos](https://www.inegi.org.mx/contenidos/programas/enpol/2021/microdatos/fd_enpol2021.pdf) dado por el INEGI[^3].
 
-[^2]: [Encuesta Nacional de la Población Privada de la Libertad (ENPOL) 2021. Descriptor de Archivos](https://www.inegi.org.mx/contenidos/programas/enpol/2021/microdatos/fd_enpol2021.pdf). Instituto Nacional de Estadística y Geografía.
+[^3]: [Encuesta Nacional de la Población Privada de la Libertad (ENPOL) 2021. Descriptor de Archivos](https://www.inegi.org.mx/contenidos/programas/enpol/2021/microdatos/fd_enpol2021.pdf). Instituto Nacional de Estadística y Geografía.
