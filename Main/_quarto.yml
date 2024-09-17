@@ -30,8 +30,10 @@ website:
               text: Análisis de Componentes Principales (PCA)
             - href: https://qglhmj-juan0pablo-montano0diaz.shinyapps.io/CorrespondenciaSimples/
               text: Análisis de Correspondencias Simples (SCA)
-            - href: ACS.qmd
+            - href: ACM.qmd
               text: Análisis de Correspondencias Multiples (MCA)
+            - href: Agrupamiento.qmd
+              text: Agrupamiento de las variables
         - href: about.qmd
           text: Sobre nosotros
           

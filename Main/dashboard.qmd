@@ -71,7 +71,9 @@ source("DatosSeleccionados.R")
 -   [Análisis descriptivo bivariado](https://qglhmj-juan0pablo-montano0diaz.shinyapps.io/analisis_descriptivo_bivariado/)
 -   [Análisis de componentes principales (PCA)](ACP.qmd)
 -   [Análisis de correspondencias simple (SCA)](https://qglhmj-juan0pablo-montano0diaz.shinyapps.io/CorrespondenciaSimples/)
--   [Análisis de correspondencias múltiples (MCA)](ACS.qmd)
+-   [Análisis de correspondencias múltiples (MCA)](ACM.qmd)
+
+- [Agrupamiento de las variables](Agrupamiento.qmd)
 :::
 
 ::: {.callout-tip icon="false" collapse="true" appearance="simple"}

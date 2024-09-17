@@ -208,7 +208,7 @@ Tabla1 <- Tabla1[Variables] %>%
          EDAD_CONSUMO_ANFETAMINAS=P1_42_13
   ) %>% mutate(TIPO_CARCEL= as.factor(TIPO_CARCEL),
                TIEMPO_CARCEL = as.factor(TIEMPO_CARCEL) ,
-               SEXO= as.factor(SEXO),
+               SEXO= as.character(SEXO),
                EDAD= as.numeric(EDAD),
                NACION= as.factor(NACION),
                EST_CIVIL=as.factor(EST_CIVIL),
@@ -512,7 +512,13 @@ Tabla1 <- Tabla1 %>%
                 .names = "CATEGORIAS_{col}"))
 Tabla1$PARO_ESTUDIOS <- as.character(Tabla1$PARO_ESTUDIOS)
 Tabla1$DECLARACION_CULPABLE<-as.character(Tabla1$DECLARACION_CULPABLE)
+Tabla1$SALIDA_AMIGOS<-as.character(Tabla1$SALIDA_AMIGOS)
+Tabla1$SALIDA_FAMILIA<-as.character(Tabla1$SALIDA_FAMILIA)
+Tabla1$SALIDA_ESTUDIO<-as.character(Tabla1$SALIDA_ESTUDIO)
 Tabla1[is.na(Tabla1$PARO_ESTUDIOS),]["PARO_ESTUDIOS"]<-"No paró estudios"
 Tabla1[is.na(Tabla1$DECLARACION_CULPABLE),]["DECLARACION_CULPABLE"]<-"No se declaró culpable"
+Tabla1[is.na(Tabla1$SALIDA_AMIGOS),][["SALIDA_AMIGOS"]]<-"No Aplica"
+Tabla1[is.na(Tabla1$SALIDA_FAMILIA),]["SALIDA_FAMILIA"]<-"No Aplica"
+Tabla1[is.na(Tabla1$SALIDA_ESTUDIO),]["SALIDA_ESTUDIO"]<-"No Aplica"
 
 Tabla1[c("ANOS_PROCESO","ANOS_CONDENA","MESES_PROCESO","MESES_CONDENA")]<-NULL

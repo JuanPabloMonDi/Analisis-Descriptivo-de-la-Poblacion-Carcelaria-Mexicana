@@ -1,0 +1,470 @@
+---
+title: "Agrupamiento"
+format: html
+editor: source
+---
+
+Finalmente, para concluir el análisis estadístico de nuestro estudio,agruparemos a los individuos a partir de sus características, con el fin de encontrar patrones en la población encuestada. 
+
+Para el agrupamiento de los individuos, se utilizará el método jerárquico de Ward y el método de Kmeans. Al igual que en los análisis de ACP y ACM. Utilizaremos los siguientes paquetes de R para realizar el análisis estadístico.
+
+```{r}
+#| label: carga-librerias
+#| message: false
+#| code-fold: true
+#| output: false
+
+#Manejo de datos
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(readxl)
+#Gráficos
+library(ggplot2)
+library(gridExtra)
+library(plotly)
+library(GGally)
+#ACP
+library(ade4)
+library(FactoClass)
+library(FactoMineR)
+library(factoextra)
+#Datos importados
+source("DatosSeleccionados.R")
+
+#Ajustes de tema del documento y graficos
+library(scales)
+library(DT)
+library(gt)
+library(RColorBrewer)
+theme_set(theme_minimal(base_size = 24, base_family = "Atkinson Hyperlegible"))
+library(hrbrthemes)
+options(scipen=999) #Evitar notación científica
+```
+
+
+En este caso, nos centraremos únicamente en el análisis factorial que presentó mayores y mejores resultados relacionados con el objetivo de nuestro estudio, es decir, realizaremos el agrupamiento de los individuos basándonos en el análisis de correspondencias múltiples realizado para las variables que presentaron una relación clara con la cantidad de personas con las cuales los individuos comparten celda, los cuales resultaron ser, las variables de vida intracarcelaria.
+
+La siguiente tabla muestra nuestro conjunto de datos considerado para el ACM y agrupamiento.
+
+```{r}
+#| label: Selección1
+#| echo: false
+#| message: false
+#| warning: false
+#| output: true
+
+#Variables seleccionadas en el ACM
+Var_cuali_intra<-c(
+ "CAR_PERSONAS_CELDA",
+ "CELDA_VENTANAS",
+ "CELDA_AGUA_POTABLE" ,
+ "CELDA_DRENAJE",
+ "CELDA_LUZ",
+ "CELDA_DUCHA" ,
+ "CELDA_SANITARIO" ,
+ "CELDA_SERVICIO_MEDICO",
+ "CELDA_ALIMENTOS",
+ "CARCEL_EJERCICIO",
+ "CARCEL_LECTURA" ,
+ "CARCEL_RELIGION" ,
+ "CARCEL_LLAMADAS" ,
+ "CARCEL_ESTUDIO" ,
+ "CARCEL_VISITA" ,
+ "CELDA_SEGURIDAD" ,
+ "CARCEL_SEGURIDAD",
+ "TIPO_CARCEL",
+ "TIEMPO_CARCEL",
+ "ORIENT_SEXUAL",
+ "SEXO"
+)
+
+DatosCualiIntra<-Tabla1[,Var_cuali_intra]
+DatosCualiIntra[]<-lapply(DatosCualiIntra, as.factor)
+kable(head(DatosCualiIntra, 10))
+```
+
+## Paso 1: Análisis factorial (ACM)
+
+
+Las variables consideradas en el componente de vida intracarcelaria son las siguientes:
+
+-   Sexo de la persona
+-   Orientación sexual de la persona
+-   Acceso a ventanas en la celda
+-   Acceso a agua potable en la celda
+-   Acesso a un sistema de drenaje en la celda
+-   Acceso a luz electrica en la celda
+-   Acceso a una ducha en la celda
+-   Acceso a un sanitario en la celda
+-   Acceso a servicio médico dentro de la celda
+-   Acceso a alimentos gratuitos en la celda
+-   Acceso a espacios de ejercicio en la carcel
+-   Acceso a espacios y/o material de lectura en la carcel
+-   Facilidad de ejercer la religión dentro de la carcel
+-   Puede realizar llamadas dentro de la carcel
+-   Puede continuar con sus estudios dentro de la carcel
+-   Puede recibir visitas dentro de la carcel
+-   Sensación de seguridad en la celda
+-   Sensación de seguridad en la carcel
+-   Tipo de carcel
+-   Cantidad de personas en la celda
+
+
+Posteriormente, realizamos el ACM mediante el siguiente comando
+```{r}
+#| code-fold: show
+#| label: acmIntracarcelario
+acmIntra <- MCA(DatosCualiIntra, graph=FALSE,level.ventil = 0.01,ncp=7)
+```
+
+Para evitar el ruido y distorsión de las categorías "No sabe/No responde" utilizamos la técnica de ventilación de variables; esta es implementada mediante el parámetro ``level.ventil=0.01``, el cual disipa el efecto de aquellas categorías que contienen menos del 1% de la población en su respectiva variable cualitativa. 
+
+Los resultados de este ACM fueron mostrados previamente en la sección de [Análisis de Correspondencias Múltiples](ACM.qmd).
+
+
+## Paso 2: Seleccionar el número de ejes
+
+Para la selección del número de ejes a considerar en el ACM, utilizaremos el criterio de Benzécri, pues el screeplot tradicional puede verse afectado por la presencia de ejes "parásitos".
+
+```{r}
+#| label: screeplotIntra
+#| echo: false
+screeplot <- fviz_screeplot(acmIntra, addlabels = TRUE, ylim = c(0, 20)) +  ggtitle("Scree Plot") + theme_minimal()+ylab("Porcentaje de varianza explicada")+xlab("Ejes")
+## Usando modif.rate() del paquete GDAtools:
+# ptau <- modif.rate(acm)$modif[, 1]
+## Haciendo las cuentas uno mismo:
+s <- ncol(DatosCualiIntra)
+l <- acmIntra$eig[acmIntra$eig[,1] > 1/s, 1]
+tau <- ( s / (s - 1) )^2 * ( l - (1/s) )^2
+ptau <- tau / sum( tau ) * 100
+
+# Creamos un data frame para usar con ggplot2
+barplot_df <- data.frame(Indice = factor(1:length(ptau)), Valor = ptau)
+
+# Creamos el gráfico de barras con ggplot2
+barplot_gg <- ggplot(barplot_df, aes(x = Indice, y = Valor)) +
+  geom_bar(stat = "identity", fill = "darkred") +
+  ylim(0, max(barplot_df$Valor+10)) +
+  labs(x = "Ejes", y = expression(tau(lambda))) +
+  theme_minimal() +
+  ggtitle("Criterio de Benzécri")
+
+grid.arrange(screeplot, barplot_gg, ncol = 1)
+```
+
+Al observar los valores de inercia ajustada por el criterio de Benzécri, obtenemos que los 3 primeros ejes acumulan alrededor del 90% de la inercia de los datos. 
+
+```{r}
+#| label: Tabla-benzecriintra
+#| echo: false
+#| warning: false
+#| output: true
+
+kable(barplot_df[1:5,])
+```
+
+Por lo tanto, para nuestro agrupamiento, consideraremos únicamente los 3 primeros ejes de nuestro ACM. Es decir, nuestras variables cuantitativas a agrupar mediante K-means consisten en las coordenadas de los 3 primeros ejes de cada uno de los individuos.
+
+
+```{r}
+#| label: seleccionejes
+#| code-fold: show
+Y<-acmIntra$ind$coord[,1:3]
+```
+
+
+## Paso 3: Pre-agrupamiento
+
+Dado que contamos con la información de 61449 individuos, es necesario realizar un preagrupamiento de los datos antes del agrupamiento jerárquico. Para esto, implementaremos el método de k-means para obtener 5000 grupos. 
+
+El método de K-means nos ayuda a que, dentro de cada uno de estos 5000 grupos, se posea una inercia mínima. Es decir, que estos los individuos dentro de cada grupo sean "parecidos" o próximos según su distancia euclidiana.
+
+```{r}
+#| label: Preagrupamieto
+#| code-fold: show
+#| fig-cap: ''
+#| fig-align: 'center'
+#| fig-width: 5
+#| fig-height: 5.5
+set.seed(1311) #Fijamos la semilla
+pregroup<- kmeans(Y, centers = 5000)  #Agrupamos los datos en 5000 grupos
+```
+
+## Paso 4: Agrupamiento Jerárquico
+
+Ahora que tenemos 5000 grupos de individuos, realizaremos un agrupamiento jerárquico usando la distancia de Ward entre los centros de gravedad de los 5000 grupos. para esto se utiliza la función ``ward.cluster`` del paquete ``FactoClass``.
+
+Asi, obtenemos el siguiente dendograma de esta agrupación de grupos.
+```
+
+kable(barplot_df[1:5,])
+```
+```{r}
+#| label: jerarquico
+#| fig-cap: ''
+#| fig-align: 'center'
+#| fig-width: 5
+#| fig-height: 5.5
+#| echo: false
+
+hclCafe <- ward.cluster(dista=dist(pregroup$centers), h.clust=1) # función de FactoClass
+plot(hclCafe, las=1, col="darkblue", main="", sub="", xlab="")
+abline(h=seq(0, 7, 0.5), col="gray90", lty=3)
+```
+
+
+
+
+## Paso 5: Número total de grupos
+Observando y analizando el dendograma anterior, se consideraron las ideas de clasificar la población en 4 o 7 grupos.Debido a esto, se hizo la agrupación de los individuos para estas 2 cantidades. 
+
+Al final, los 7 grupos resultantes no presentaban diferencias claras en sus categorías. Por lo tanto, se optó por agrupar a la población en 4 grupos, los cuales presentaban diferencias claras entre ellos.
+
+El corte del árbol y la selección de grupos se realizó mediante el siguiente comando
+
+```{r}
+#| label: numero-grupos
+#| code-fold: show
+grupos_jerarquicos <- cutree(hclCafe, k=4)
+```
+
+## Paso 6: Consolidación
+
+Finalmente, realizamos nuestro K-means de consolidación a partir de los centros de gravedad obtenidos en el agrupamiento jerárquico. 
+
+```{r}
+#| label: consolidacion
+#| code-fold: true
+
+set.seed(1311) #Fijamos semilla 
+
+centros_de_gravedad <- aggregate(pregroup$centers, by = list(grupos_jerarquicos), FUN = mean) #Calculamos los centros de gravedad obtenidos para los 5000 grupos
+
+
+kmeans_consolidacion <- kmeans(pregroup$centers, centers = centros_de_gravedad[, -1]) #Iniciamos kmeans con los centros de gravedad calculados
+
+ordenados <- order(rowSums(kmeans_consolidacion$centers))
+
+# Crear una nueva asignación de grupos reordenada
+consolidacion <- match(kmeans_consolidacion$cluster, ordenados)
+
+Grupos<-consolidacion[pregroup$cluster] #Obtenemos los grupos finales
+#Grupos<-kmeans_consolidacion$cluster[pregroup$cluster] #Obtenemos los grupos finales
+```
+
+## Paso 7: Caracterización
+
+Una vez obtenidos los grupos, realizamos un análisis descriptivo de estos para reconocer las variables que caracterizan a cada uno de estos. 
+
+Dado que se trata únicamente de variables cualitativas, haremos la caracterización a partir de los valores test y la tabla de perfiles entre los grupos y las demás variables.
+
+```{r}
+#| label: AsignacionGrupos
+#| echo: false
+
+Y<-as.data.frame(Y)
+Y[["GrupoFinal"]]<-as.factor(Grupos)
+DatosCualiIntra<-cbind(DatosCualiIntra,Y[c("GrupoFinal")])
+valores_test<-cluster.carac(DatosCualiIntra[,1:21], DatosCualiIntra$GrupoFinal)
+```
+
+
+:::panel-tabset
+
+### Grupo 1
+
+**Valores test**
+```{r}
+#| label: valuest grupo1
+#| message: false
+#| echo: false
+#| warning: false
+#| output: true
+
+kable(valores_test[["1"]])
+```
+
+
+### Grupo 2
+**Valores test**
+```{r}
+#| label: valuest grupo2
+#| message: false
+#| echo: false
+#| warning: false
+#| output: true
+
+
+kable(valores_test[["2"]])
+```
+
+### Grupo 3
+
+**Valores test**
+```{r}
+#| label: valuest grupo3
+#| message: false
+#| echo: false
+#| warning: false
+#| output: true
+
+kable(valores_test[["3"]])
+```
+
+### Grupo 4
+**Valores test**
+```{r}
+#| label: valuest grupo4
+#| message: false
+#| echo: false
+#| warning: false
+#| output: true
+
+kable(valores_test[["4"]])
+```
+
+:::
+
+###  Gráficos
+
+
+::: panel-tabset
+
+
+
+#### Sexo
+```{r}
+#| label: graficoperfilessexo
+#| echo: false
+tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$SEXO)
+
+    plotct(tc, "row", col=1+(1:ncol(tc)))
+
+```
+
+#### Agua potable
+
+```{r}
+#| label: graficoperfilesagua
+#| echo: false
+tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$CELDA_AGUA_POTABLE)
+
+    plotct(tc, "row", col=1+(1:ncol(tc)))
+
+```
+
+
+#### Personas celda
+
+```{r}
+#| label: graficoperfilescelda
+#| echo: false
+tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$CAR_PERSONAS_CELDA)
+
+    plotct(tc, "row", col=1+(1:ncol(tc)))
+
+```
+
+#### Ejercicio
+
+```{r}
+#| label: graficoperfilesEjercicio
+#| echo: false
+tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$CARCEL_EJERCICIO)
+
+    plotct(tc, "row", col=1+(1:ncol(tc)))
+
+```
+
+#### Ventanas
+
+```{r}
+#| label: graficoperfilesVentanas
+#| echo: false
+tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$CELDA_VENTANAS)
+
+    plotct(tc, "row", col=1+(1:ncol(tc)))
+
+```
+
+#### Tipo Carcel
+
+```{r}
+#| label: graficoperfilesTipoCarcel
+#| echo: false
+tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$TIPO_CARCEL)
+
+    plotct(tc, "row", col=1+(1:ncol(tc)))
+
+```
+
+#### Tiempo Carcel
+
+```{r}
+#| label: graficoperfilesTiempoCarcel
+#| echo: false
+tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$TIEMPO_CARCEL)
+
+    plotct(tc, "row", col=1+(1:ncol(tc)))
+
+```
+
+:::
+
+
+
+
+## Paso 8: Proyección de los grupos en los planos factoriales
+
+::: panel-tabset
+
+### Eje 1-2
+
+
+```{r}
+#| label: plano1-2
+#| echo: false
+#| output: true
+fviz_mca_ind(acmIntra,label = "none",
+             axes=c(1,2),
+             habillage = Y$GrupoFinal,
+             #col.ind= Y$GrupoFinal,
+             palette = "jco",  addEllipses = TRUE,
+             ellipse.type = "convex",
+             repel = TRUE) 
+```
+
+### Eje 1-3
+
+
+```{r}
+#| label: plano1-3
+#| echo: false
+#| output: true
+fviz_mca_ind(acmIntra,label = "none",
+             axes=c(1,3),
+             habillage = Y$GrupoFinal,
+             #col.ind= Y$GrupoFinal,
+             palette = "jco",  addEllipses = TRUE,
+             ellipse.type = "convex",
+             repel = TRUE) 
+```
+
+
+### Eje 2-3
+
+```{r}
+#| label: plano2-3
+#| echo: false
+#| output: true
+fviz_mca_ind(acmIntra,label = "none",
+             axes=c(2,3),
+             habillage = Y$GrupoFinal,
+             #col.ind= Y$GrupoFinal,
+             palette = "jco",  addEllipses = TRUE,
+             ellipse.type = "convex",
+             repel = TRUE) 
+```
+
+:::

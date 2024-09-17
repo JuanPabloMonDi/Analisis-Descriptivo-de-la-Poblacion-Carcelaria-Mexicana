@@ -1,0 +1,279 @@
+"0","#| label: carga-librerias"
+"0","#| message: false"
+"0","#| echo: true"
+"0","#| output: false"
+"0",""
+"0","#Manejo de datos"
+"0","library(tidyverse)"
+"2","Warning:"
+"2"," package ‘ggplot2’ was built under R version 4.3.3
+"
+"2","Warning:"
+"2"," package ‘lubridate’ was built under R version 4.3.2
+"
+"1","── [1mAttaching core tidyverse packages[22m ─────────────────
+[32m✔[39m [34mdplyr    [39m 1.1.3     [32m✔[39m [34mreadr    [39m 2.1.4
+[32m✔[39m [34mforcats  [39m 1.0.0     [32m✔[39m [34mstringr  [39m 1.5.1
+[32m✔[39m [34mggplot2  [39m 3.5.1     [32m✔[39m [34mtibble   [39m 3.2.1
+[32m✔[39m [34mlubridate[39m 1.9.3     [32m✔[39m [34mtidyr    [39m 1.3.0
+[32m✔[39m [34mpurrr    [39m 1.0.2     
+"
+"1","── [1mConflicts[22m ──────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the ]8;;http://conflicted.r-lib.org/conflicted package]8;; to force all conflicts to become errors
+"
+"0","library(readr)"
+"0","library(dplyr)"
+"0","library(readxl)"
+"0","#Gráficos"
+"0","library(ggplot2)"
+"0","library(gridExtra)"
+"2","
+Attaching package: ‘gridExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    combine
+
+"
+"0","library(plotly)"
+"2","Warning:"
+"2"," package ‘plotly’ was built under R version 4.3.2
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","
+Attaching package: ‘plotly’
+
+"
+"2","The following object is masked from ‘package:ggplot2’:
+
+    last_plot
+
+"
+"2","The following object is masked from ‘package:stats’:
+
+    filter
+
+"
+"2","The following object is masked from ‘package:graphics’:
+
+    layout
+
+"
+"0","library(GGally)"
+"2","Warning:"
+"2"," package ‘GGally’ was built under R version 4.3.2
+"
+"2","Registered S3 method overwritten by 'GGally':
+  method from   
+  +.gg   ggplot2
+"
+"0","#ACP"
+"0","library(ade4)"
+"2","Warning:"
+"2"," package ‘ade4’ was built under R version 4.3.3
+"
+"0","library(FactoClass)"
+"2","Warning:"
+"2"," package ‘FactoClass’ was built under R version 4.3.3
+"
+"2","Carregando pacotes exigidos: ggrepel
+"
+"2","Warning:"
+"2"," package ‘ggrepel’ was built under R version 4.3.2
+"
+"2","Carregando pacotes exigidos: xtable
+"
+"2","Carregando pacotes exigidos: scatterplot3d
+"
+"0","library(FactoMineR)"
+"2","Warning:"
+"2"," package ‘FactoMineR’ was built under R version 4.3.3
+"
+"2","
+Attaching package: ‘FactoMineR’
+
+"
+"2","The following object is masked from ‘package:ade4’:
+
+    reconst
+
+"
+"0","library(factoextra)"
+"2","Warning:"
+"2"," package ‘factoextra’ was built under R version 4.3.3
+"
+"2","Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
+"
+"0","#Datos importados"
+"0","source(""DatosSeleccionados.R"")"
+"2","Warning:"
+"2"," package ‘kableExtra’ was built under R version 4.3.3
+"
+"2","
+Attaching package: ‘kableExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    group_rows
+
+"
+"2","Warning:"
+"2"," package ‘scales’ was built under R version 4.3.3
+"
+"2","
+Attaching package: ‘scales’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    discard
+
+"
+"2","The following object is masked from ‘package:readr’:
+
+    col_factor
+
+"
+"2","Warning:"
+"2"," package ‘DT’ was built under R version 4.3.3
+"
+"2","Warning:"
+"2"," package ‘gt’ was built under R version 4.3.3
+"
+"1","[38;5;251mNew names:
+[36m•[38;5;251m `` -> `...1`[39m
+"
+"2","Warning:"
+"2"," [38;5;251mOne or more parsing issues, call `problems()` on your
+data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m
+"
+"1","[1mRows: [22m[34m61449[39m [1mColumns: [22m[34m182[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (24): ID_PER, CVE_ENT, NOM_ENT, CEN_INT, NOM_...
+[32mdbl[39m (151): ...1, SEXO, FUERO, P1_1, P1_1A, P1_2, P...
+[33mlgl[39m   (7): P1_10_7, P1_27_5, P1_27_8, P1_44_6, P1_...
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"1","[38;5;251mNew names:
+[36m•[38;5;251m `` -> `...1`[39m
+"
+"2","Warning:"
+"2"," [38;5;251mOne or more parsing issues, call `problems()` on your
+data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m
+"
+"1","[1mRows: [22m[34m61449[39m [1mColumns: [22m[34m184[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (44): ID_PER, CVE_ENT, NOM_ENT, CEN_INT, NOM_...
+[32mdbl[39m (137): ...1, SEXO, FUERO, P2_3_01, P2_3_02, P2...
+[33mlgl[39m   (3): P2_8A_10, P2_8M_10, P2_9_10
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"1","[38;5;251mNew names:
+[36m•[38;5;251m `` -> `...1`[39m
+"
+"1","[1mRows: [22m[34m61449[39m [1mColumns: [22m[34m126[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (11): ID_PER, CVE_ENT, NOM_ENT, CEN_INT, NOM_...
+[32mdbl[39m (115): ...1, SEXO, FUERO, P4_1_01, P4_1_02, P4...
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"1","[38;5;251mNew names:
+[36m•[38;5;251m `` -> `...1`[39m
+"
+"1","[1mRows: [22m[34m61449[39m [1mColumns: [22m[34m241[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (17): ID_PER, CVE_ENT, NOM_ENT, CEN_INT, NOM_...
+[32mdbl[39m (224): ...1, SEXO, FUERO, P5_1, P5_2_1, P5_2_2...
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"1","[38;5;251mNew names:
+[36m•[38;5;251m `` -> `...1`[39m
+"
+"2","Warning:"
+"2"," [38;5;251mOne or more parsing issues, call `problems()` on your
+data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m
+"
+"1","[1mRows: [22m[34m61449[39m [1mColumns: [22m[34m128[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (10): ID_PER, CVE_ENT, NOM_ENT, CEN_INT, NOM_...
+[32mdbl[39m (105): ...1, SEXO, FUERO, P6_2, P6_3, P6_4_1, ...
+[33mlgl[39m  (13): P6_17_2, P6_18_2, P6_17_3, P6_18_3, P6_...
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"1","[38;5;251mNew names:
+[36m•[38;5;251m `` -> `...1`[39m
+"
+"1","[1mRows: [22m[34m61449[39m [1mColumns: [22m[34m247[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (22): ID_PER, CVE_ENT, NOM_ENT, CEN_INT, NOM_...
+[32mdbl[39m (225): ...1, SEXO, FUERO, P7_1, P7_3, P7_4_1, ...
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"1","[38;5;251mNew names:
+[36m•[38;5;251m `` -> `...1`[39m
+"
+"1","[1mRows: [22m[34m61449[39m [1mColumns: [22m[34m157[39m
+"
+"1","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m  (16): ID_PER, CVE_ENT, NOM_ENT, CEN_INT, NOM_...
+[32mdbl[39m (141): ...1, SEXO, FUERO, P8_1_01, P8_1_02, P8...
+"
+"1","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+"
+"0","#Ajustes de tema del documento y graficos"
+"0","library(scales)"
+"0","library(DT)"
+"0","library(gt)"
+"0","library(RColorBrewer)"
+"0","theme_set(theme_minimal(base_size = 24, base_family = ""Atkinson Hyperlegible""))"
+"0","library(hrbrthemes)"
+"2","Warning:"
+"2"," package ‘hrbrthemes’ was built under R version 4.3.3
+"
+"0","options(scipen=999) #Evitar notación científica"

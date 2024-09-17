@@ -1,7 +1,0 @@
-"0","#| fig-cap: ''"
-"0","#| fig-align: 'center'"
-"0","#| fig-width: 5.5"
-"0","#| fig-height: 3.5"
-"0","fviz_mca_var(acm, axes = c(1,2),"
-"0","             choice = ""mca.cor"", repel = TRUE, "
-"0","             ggtheme = theme_minimal())"

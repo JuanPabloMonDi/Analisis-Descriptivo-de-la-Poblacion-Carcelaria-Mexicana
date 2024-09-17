@@ -1,0 +1,3 @@
+"0","#| code-fold: show"
+"0","#| label: acmIntracarcelario"
+"0","acmIntra <- MCA(DatosCualiIntra, graph=FALSE,level.ventil = 0.01,ncp=7)"

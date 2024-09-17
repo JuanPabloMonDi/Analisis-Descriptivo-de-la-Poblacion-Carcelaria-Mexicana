@@ -1,0 +1,7 @@
+"0","#| label: AsignacionGrupos"
+"0","#| echo: false"
+"0",""
+"0","Y<-as.data.frame(Y)"
+"0","Y[[""GrupoFinal""]]<-as.factor(Grupos)"
+"0","DatosCualiIntra<-cbind(DatosCualiIntra,Y[c(""GrupoFinal"")])"
+"0","valores_test<-cluster.carac(DatosCualiIntra[,1:21], DatosCualiIntra$GrupoFinal)"

@@ -1,0 +1,3 @@
+"0","#| label: numero-grupos"
+"0","#| code-fold: show"
+"0","grupos_jerarquicos <- cutree(hclCafe, k=7)"
