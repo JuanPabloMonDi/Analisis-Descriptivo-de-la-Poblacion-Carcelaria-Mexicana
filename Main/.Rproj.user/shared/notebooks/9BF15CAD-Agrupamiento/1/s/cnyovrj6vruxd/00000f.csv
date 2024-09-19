@@ -1,6 +1,0 @@
-"0","#| label: graficoperfilesTiempoCarcel"
-"0","#| echo: false"
-"0","tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$TIEMPO_CARCEL)"
-"0",""
-"0","    plotct(tc, ""row"", col=1+(1:ncol(tc)))"
-"0",""

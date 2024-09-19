@@ -1,5 +1,6 @@
 ---
 title: "Análisis de Correspondencias Múltiples"
+author: "Juan Pablo Montaño Díaz & Laura Katherine Martinez Castiblanco"
 format: html
 editor: visual
 ---
@@ -899,7 +900,7 @@ Puede observarse que la 4 dimensión fue obtenida a partir de variables relacion
 
 Como se observó en el análisis descriptivo bivariado, en el análisis de correspondencias simples y en los resultados de los análisis de correspondencias múltiples anteriores, las relaciones entre las variables cualitativas se encuentran principalmente en aquellas que están conceptualmente vinculadas, como las condiciones de vida dentro de la celda o las variables sociodemográficas.
 
-Esto es coherente desde un punto de vista lógico y conceptual, pues desde el diseño del cuestionario, se sugería la existencia de estas relaciones desde su estructura, la cual dividía y ordenaba las preguntas del formulario en 11 temáticas. 
+Esto es coherente desde un punto de vista lógico y conceptual, pues desde el diseño del cuestionario, se sugería la existencia de estas relaciones desde su estructura, la cual dividía y ordenaba las preguntas del formulario en 11 temáticas.
 
 Por lo tanto, para mejorar la visualización e interpretación de los resultados, decidimos agrupar las variables basándonos en su significado conceptual y en las relaciones identificadas en los análisis descriptivos y factoriales previos. Además, para evitar la inflación de la inercia por las categorías de baja frecuencia, realizaremos el análisis descartando las categorías que representan menos del 1% de la población.
 
@@ -965,8 +966,8 @@ acmSoc <- MCA(DatosCualiSoc, graph=FALSE,level.ventil = 0.01,ncp=7,quali.sup = c
 ```
 
 ### Análisis de las variables
-::: panel-tabset
 
+::: panel-tabset
 #### Ejes 1-2
 
 ```{r}
@@ -989,7 +990,7 @@ Además, puede observarse que el consumo de estas sustancias en edades entre los
 
 También, se observa que las categorías sobre el consumo de estas sustancias despues de los 18 años, y las categorías de "nunca han consumido" están más relacionadas con las mujeres. Junto a estas variables, también se encuentra una relación entre estar divorciada/viuda, tener hijois y ser mujer.
 
-Finalmente, puede observarse la alta relación entre el nivel educativo y parar estudios. Relación que ya fue vista en los anteriores ACM. 
+Finalmente, puede observarse la alta relación entre el nivel educativo y parar estudios. Relación que ya fue vista en los anteriores ACM.
 
 #### Ejes 1-3
 
@@ -1009,9 +1010,7 @@ fviz_mca_var_interactive(acmSoc,col.var = "cos2", gradient.cols = c("#00AFBB", "
 
 Este plano, además de mostrar algunas relaciones mencionadas previamente, muestra la existencia de una relación entre ser mujer y parar los estudios debido a un embarazo, y también, ser mujer y ser homosexual.
 
-
-también nos muestra que las poseer alguna discapacidad auditiva o motriz, está relacionada a no haber estudiado. Sin embargo, la calidad de representación de estas categorías no es alta, por lo que este resultado puede ser invalido. 
-
+también nos muestra que las poseer alguna discapacidad auditiva o motriz, está relacionada a no haber estudiado. Sin embargo, la calidad de representación de estas categorías no es alta, por lo que este resultado puede ser invalido.
 
 #### Ejes 3-4
 
@@ -1035,8 +1034,8 @@ Este eje nos muestra la relación entre vivir con los padres y ser soltero, vivi
 Cabe resaltar que en los gráficos anteriores es posible encontrar muchas más relaciones entre las variables, sin embargo, solo fueron mencionadas aquellas que presentaron un valor alto en los $cos^2$, es decir, aquellas que se encontraban representadas por el plano que se estaba considerando. Esto, para evitar mencionar relaciones que puedan ser inválidas. Siendo así, es posible que incluso algunas de las relaciones mencionadas sean significativas.
 
 ### Contribuciónes de los ejes
-::: panel-tabset
 
+::: panel-tabset
 #### Valores propios
 
 ```{r}
@@ -1106,8 +1105,8 @@ contrib_plotly <- ggplotly(contrib)
 
 contrib_plotly
 ```
-Este eje fue construido debido a la alta correlación entre el motivo de parar estudios y el nivel educativo. Por lo que sus resultados no son destacables.
 
+Este eje fue construido debido a la alta correlación entre el motivo de parar estudios y el nivel educativo. Por lo que sus resultados no son destacables.
 
 #### Contribución 3er eje
 
@@ -1140,8 +1139,8 @@ contrib_plotly <- ggplotly(contrib)
 
 contrib_plotly
 ```
-Este eje está compuesto por categorías de las variables de estado civil, y la composición del hogar. 
 
+Este eje está compuesto por categorías de las variables de estado civil, y la composición del hogar.
 :::
 
 Una vez vista la inercia de cada uno de los ejes, y las categorías que contribuyeron a la construcción de cada uno de estos. Se consideraron los primeros 4 ejes del ACM, dado que, según el criterio de Benzécri, estos contienen alrededor del 52% de la inercia de los datos. Además de presentar diferentes relaciones entre sus variables, las cuales ya fueron mencionadas previamente.
@@ -1150,12 +1149,11 @@ Una vez vista la inercia de cada uno de los ejes, y las categorías que contribu
 
 Las variables económicas consideradas para la realización de este ACM son:
 
-- Excluyendo a la persona, quien sería la cabeza del hogar en el lugar donde vive. (si la persona vive sola, se tiene la categoría "vive solo/a")
-- Alguna vez ha trabajado, ya sea una actividad legal o ilegal.
-- Tenian suficiente comida todos los días (En el último año antes de la detención)
-- Tenían alguna deuda (En el último año antes de la detención)
-- Cuanto fue el salario total del último mes antes de la detención
-
+-   Excluyendo a la persona, quien sería la cabeza del hogar en el lugar donde vive. (si la persona vive sola, se tiene la categoría "vive solo/a")
+-   Alguna vez ha trabajado, ya sea una actividad legal o ilegal.
+-   Tenian suficiente comida todos los días (En el último año antes de la detención)
+-   Tenían alguna deuda (En el último año antes de la detención)
+-   Cuanto fue el salario total del último mes antes de la detención
 
 ```{r}
 #| label: ACM Economicas
@@ -1175,6 +1173,7 @@ acmEco <- MCA(DatosCualieco, graph=FALSE,level.ventil = 0.01)
 ```
 
 ### Análisis de las variables
+
 ```{r}
 #| fig-cap: ''
 #| fig-align: 'center'
@@ -1186,11 +1185,11 @@ fviz_mca_var_interactive(acmEco, axes=c(1,2), repel = TRUE,  ggtheme=theme_minim
 
 ```
 
-En este plano, puede observarse como cada categoría del salario, se relaciona con algunas condiciones económicas de la persona. 
+En este plano, puede observarse como cada categoría del salario, se relaciona con algunas condiciones económicas de la persona.
 
 Puede verse que, la categoría del salario más bajo es la más próxima a la categoría correspondiente a no poder comer todos los días;la categoría de "no recibia ingresos" está relacionada con nunca haber trabajado.
 
-También, puede verse que las categorías de *PODIA_COMER.SI*, *DEUDA_NO*, vivir solo o con su pareja sentimental y *SALARIO_MES.3* (entre 5501 y 7500 pesos mexicanos) tienen una estrecha relación. También estas categorías están relacionadas con las categorías correspondientes a salarios mas altos, pero con menos intensidad. 
+También, puede verse que las categorías de *PODIA_COMER.SI*, *DEUDA_NO*, vivir solo o con su pareja sentimental y *SALARIO_MES.3* (entre 5501 y 7500 pesos mexicanos) tienen una estrecha relación. También estas categorías están relacionadas con las categorías correspondientes a salarios mas altos, pero con menos intensidad.
 
 Finalmente, las personas cuya cabeza del hogar era una persona diferente a ellos mismos o sus parejas, poseían menos ingresos mensuales antes de su detención.
 
@@ -1241,7 +1240,6 @@ contrib_plotly <- ggplotly(contrib)
 contrib_plotly
 ```
 
-
 #### Contribución 2do eje
 
 ```{r}
@@ -1256,7 +1254,6 @@ contrib_plotly <- ggplotly(contrib)
 
 contrib_plotly
 ```
-
 :::
 
 Dada las inercias observadas, consideramos únicamente los 2 primeros ejes de este ACM.
@@ -1267,15 +1264,14 @@ Al observar la contribución de cada una de las categorías a la construcción d
 
 Las variables delictivas consideradas en el ACM fueron:
 
-- El individuo ya habia sido sentenciado antes en un centro de reclusión.
-- Motivo de detención de la persona
-- Tiempo que hubo entre el delito y la detención de la persona.
-- La policia o autoridad que lo detuvo le propuso algun tipo de soborno a cambio de dejarlo ir, no lastimarlo, no hacer daño a la familia...etc.
-- Motivo por el cual la persona se declaró culpable (en caso de haberlo hecho)
-- Durante el juicio de la persona, las autoridades le pidieron un soborno a cambio de dejarlo ir o alterar los hechos para beneficiarlo.
-- Tiempo que la persona ha estado en proceso o fue condenada.
-- Cantidad de delitos abiertos (cualitativa suplementaria)
-
+-   El individuo ya habia sido sentenciado antes en un centro de reclusión.
+-   Motivo de detención de la persona
+-   Tiempo que hubo entre el delito y la detención de la persona.
+-   La policia o autoridad que lo detuvo le propuso algun tipo de soborno a cambio de dejarlo ir, no lastimarlo, no hacer daño a la familia...etc.
+-   Motivo por el cual la persona se declaró culpable (en caso de haberlo hecho)
+-   Durante el juicio de la persona, las autoridades le pidieron un soborno a cambio de dejarlo ir o alterar los hechos para beneficiarlo.
+-   Tiempo que la persona ha estado en proceso o fue condenada.
+-   Cantidad de delitos abiertos (cualitativa suplementaria)
 
 ```{r}
 #| label: ACM Delictivas
@@ -1301,6 +1297,7 @@ acmDeli <- MCA(DatosCualiDeli, graph=FALSE,level.ventil = 0.01,quanti.sup = 9)
 ```
 
 ### Análisis de las variables
+
 ```{r}
 #| fig-cap: ''
 #| fig-align: 'center'
@@ -1310,13 +1307,15 @@ acmDeli <- MCA(DatosCualiDeli, graph=FALSE,level.ventil = 0.01,quanti.sup = 9)
 fviz_mca_var_interactive(acmDeli, axes=c(1,2), repel = TRUE,  ggtheme=theme_minimal(),col.var = "cos2", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 
 ```
-El plano factorial nos muestra la relación entre los tiempos de una persona recluida y procesada, tal como se vió anteriormente, estos son totalmente opuestos. 
+
+El plano factorial nos muestra la relación entre los tiempos de una persona recluida y procesada, tal como se vió anteriormente, estos son totalmente opuestos.
 
 Así, se ve la relación entre las personas que se declararon culpables porque "reconocieron los hechos" o "el abogado se los recomendo" y un tiempo de condena entre 1 a 6.5 años.
 
 También, puede ver que los mayores tiempo de condena están relacionados con las personas que se declararon culpables porque fueron agredidas o amenazadas, y que también manifestaron que las autoridades pidieron un soborno durante el proceso de detención y juicio. Sin embargo, estas relaciones pueden ser no significativas dada la baja calidad de representación de estas categorías en el plano.
 
 ### Contribuciones de los ejes
+
 ::: panel-tabset
 #### Valores propios
 
@@ -1371,7 +1370,7 @@ contrib_plotly <- ggplotly(contrib)
 contrib_plotly
 ```
 
-Como es de esperarse, este eje refleja la relación más evidente de este ACM, la cual es el tiempo que la persona ha sido procesada y condenada, pues estos 2 estados son opuestos desde un punto de vista conceptual. 
+Como es de esperarse, este eje refleja la relación más evidente de este ACM, la cual es el tiempo que la persona ha sido procesada y condenada, pues estos 2 estados son opuestos desde un punto de vista conceptual.
 
 #### Contribución 2do eje
 
@@ -1388,7 +1387,7 @@ contrib_plotly <- ggplotly(contrib)
 contrib_plotly
 ```
 
-Este eje está compuesto por las categorías de INTERNO_SOBORNO_JUICIO.1 y el mayor tiempo de condena. Teniendo también influencia de los motivos por los cuales la persona se declaró culpable. 
+Este eje está compuesto por las categorías de INTERNO_SOBORNO_JUICIO.1 y el mayor tiempo de condena. Teniendo también influencia de los motivos por los cuales la persona se declaró culpable.
 :::
 
 Por lo visto en los anteriores gráficos, se consideraron únicamente los 2 primeros ejes, los cuales contienen un 80% de la inercia de los datos.
@@ -1397,26 +1396,26 @@ Por lo visto en los anteriores gráficos, se consideraron únicamente los 2 prim
 
 Las variables consideradas en el componente de vida intracarcelaria son las siguientes:
 
-- Sexo de la persona
-- Orientación sexual de la persona
-- Acceso a ventanas en la celda
-- Acceso a agua potable en la celda
-- Acesso a un sistema de drenaje en la celda
-- Acceso a luz electrica en la celda
-- Acceso a una ducha en la celda
-- Acceso a un sanitario en la celda
-- Acceso a servicio médico dentro de la celda
-- Acceso a alimentos gratuitos en la celda
-- Acceso a espacios de ejercicio en la carcel
-- Acceso a espacios y/o material de lectura en la carcel
-- Facilidad de ejercer la religión dentro de la carcel
-- Puede realizar llamadas dentro de la carcel
-- Puede continuar con sus estudios dentro de la carcel
-- Puede recibir visitas dentro de la carcel
-- Sensación de seguridad en la celda
-- Sensación de seguridad en la carcel
-- Tipo de carcel
-- Cantidad de personas en la celda
+-   Sexo de la persona
+-   Orientación sexual de la persona
+-   Acceso a ventanas en la celda
+-   Acceso a agua potable en la celda
+-   Acesso a un sistema de drenaje en la celda
+-   Acceso a luz electrica en la celda
+-   Acceso a una ducha en la celda
+-   Acceso a un sanitario en la celda
+-   Acceso a servicio médico dentro de la celda
+-   Acceso a alimentos gratuitos en la celda
+-   Acceso a espacios de ejercicio en la carcel
+-   Acceso a espacios y/o material de lectura en la carcel
+-   Facilidad de ejercer la religión dentro de la carcel
+-   Puede realizar llamadas dentro de la carcel
+-   Puede continuar con sus estudios dentro de la carcel
+-   Puede recibir visitas dentro de la carcel
+-   Sensación de seguridad en la celda
+-   Sensación de seguridad en la carcel
+-   Tipo de carcel
+-   Cantidad de personas en la celda
 
 ```{r}
 #| label: ACM Intra carcelaria
@@ -1453,10 +1452,9 @@ DatosCualiIntra<-Tabla1[,Var_cuali_intra]
 acmIntra <- MCA(DatosCualiIntra, graph=FALSE,level.ventil = 0.01)
 ```
 
-### Análisis de las variables 
+### Análisis de las variables
 
 ::: panel-tabset
-
 #### Eje 1-2
 
 ```{r}
@@ -1468,13 +1466,14 @@ acmIntra <- MCA(DatosCualiIntra, graph=FALSE,level.ventil = 0.01)
 fviz_mca_var_interactive(acmIntra, axes=c(1,2), repel = TRUE,  ggtheme=theme_minimal(),col.var = "cos2", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 
 ```
-En este eje, puede observarse claramente la alta relación que hay en no contar con un sistema de drenaje en la celda, y no contar con un sanitario dentro de esta. también, la relación entre el acceso a una ducha y el agua potable. 
 
-Además, como fue mencionado en el primer ACM, se ve una relación entre ser mujer y tener como orientación sexual la bisexualidad o la homosexualidad.  Junto a esto, se tiene una relación lógica, no tan marcada pero presente, entre ser mujer y el tipo de carcel "femenina". 
+En este eje, puede observarse claramente la alta relación que hay en no contar con un sistema de drenaje en la celda, y no contar con un sanitario dentro de esta. también, la relación entre el acceso a una ducha y el agua potable.
+
+Además, como fue mencionado en el primer ACM, se ve una relación entre ser mujer y tener como orientación sexual la bisexualidad o la homosexualidad. Junto a esto, se tiene una relación lógica, no tan marcada pero presente, entre ser mujer y el tipo de carcel "femenina".
 
 Por otro lado, la segunda componente nos muestra una relación entre no poder practicar religión, actividad física, actividades de lectura, realizar llamadas, sentirse seguro en la celda y un alto número de personas en la celda.
 
-#### Eje 2-3 
+#### Eje 2-3
 
 ```{r}
 #| fig-cap: ''
@@ -1489,7 +1488,6 @@ fviz_mca_var_interactive(acmIntra, axes=c(2,3), repel = TRUE,  ggtheme=theme_min
 Este eje, además de mostrar con mayor claridad la relación entre no contar con diversos servicios en la celda y el alto número de personas en esta. También nos muestra una relación entre ser mujer y llevar menos de 6 meses en la carcel.
 
 El eje 2, también nos muestra la relación positiva entre contar con diversos servicios en la celda, como material de lectura, espacios para hacer ejercicio, máximo 6 personas en la celda, y tener espacios para estudiar, con la sensación de seguridad en la carcel.
-
 :::
 
 ### Contribución de los ejes
@@ -1521,6 +1519,7 @@ barplot_gg <- ggplot(barplot_df, aes(x = Indice, y = Valor)) +
 
 grid.arrange(screeplot, barplot_gg, ncol = 1)
 ```
+
 De forma detallada, los primeros 4 valores de la inercia ajustada según el criterio de Benzécri son
 
 ```{r}
@@ -1531,6 +1530,7 @@ De forma detallada, los primeros 4 valores de la inercia ajustada según el crit
 
 kable(barplot_df[1:5,])
 ```
+
 #### Contribución 1er eje
 
 ```{r}
@@ -1546,8 +1546,7 @@ contrib_plotly <- ggplotly(contrib)
 contrib_plotly
 ```
 
-Este eje está compuesto principalmente por la falta de acceso a servicios en la celda. 
-
+Este eje está compuesto principalmente por la falta de acceso a servicios en la celda.
 
 #### Contribución 2do eje
 
@@ -1581,23 +1580,23 @@ contrib_plotly <- ggplotly(contrib)
 contrib_plotly
 ```
 
-Este eje está caracterizado por las variables de SEXO y del tipo de carcel. 
+Este eje está caracterizado por las variables de SEXO y del tipo de carcel.
 :::
 
 Así, a partir de los visto en los gráficos anteriores, se consideraron los 3 primeros ejes del ACM, pues estos acumulan el 90% de la inercia según el criterio de Benzécri.
 
 ## Expectativas de Salida
 
-Finalmente, el último componente en los cuales pueden agruparse conceptualmente las variables consideradas en este estudio es el de Expectativas de Salida. 
+Finalmente, el último componente en los cuales pueden agruparse conceptualmente las variables consideradas en este estudio es el de Expectativas de Salida.
 
 Para este caso, las variables usadas en el ACM fueron:
 
-- Considera que podrá encontrar vivienda una vez salga de la carcel.
-- Considera que podrá encontrar empleo una vez salga de la carcel
-- Considera que podrá continuar sus estudios una vez salga de la carcel.
-- Considera que podrá reintegrarse con sus amigos una vez salga de la carcel
-- Considera que podrá reintegrarse con su familia una vez salga de la carcel
-- Considera que podrá reincorporarse a la sociedad una vez salga de la carcel
+-   Considera que podrá encontrar vivienda una vez salga de la carcel.
+-   Considera que podrá encontrar empleo una vez salga de la carcel
+-   Considera que podrá continuar sus estudios una vez salga de la carcel.
+-   Considera que podrá reintegrarse con sus amigos una vez salga de la carcel
+-   Considera que podrá reintegrarse con su familia una vez salga de la carcel
+-   Considera que podrá reincorporarse a la sociedad una vez salga de la carcel
 
 Adicionalmente, se incluyó la variable cualitativa "CONSIDERO_SUICIDIO" ya que, además de poseer una relación conceptual con las variables de expectativa de salida, fue visto en el análisis descriptivo que estas variable posee una relación en la tabla de perfiles con estas variables.
 
@@ -1639,11 +1638,9 @@ fviz_mca_var_interactive(acmSali, axes=c(1,2), repel = TRUE,  ggtheme=theme_mini
 
 Puede observarse que la mayoría de categorías se encuentran bien representadas por el primer eje, además de mostrar relaciones marcadas entre estas. Por ejemplo, la esperanza de reintegrarse con amigos y familia, poder continuar sus estudios y el poder encontrar empleo.
 
-
 ### Contribución de los ejes
 
 ::: panel-tabset
-
 #### Valores propios
 
 ```{r}
@@ -1685,7 +1682,6 @@ De forma detallada, los 3 valores de la inercia ajustada según el criterio de B
 kable(barplot_df[1:3,])
 ```
 
-
 #### Contribución 1er eje
 
 ```{r}
@@ -1700,7 +1696,8 @@ contrib_plotly <- ggplotly(contrib)
 
 contrib_plotly
 ```
-Este eje está determinado por las variables de reintregación con la familia, amigos, continuar estudios y obtener empleo. Tal como fue visto, en el plano factorial anterior. 
+
+Este eje está determinado por las variables de reintregación con la familia, amigos, continuar estudios y obtener empleo. Tal como fue visto, en el plano factorial anterior.
 
 #### Contribución 2do eje
 
@@ -1720,12 +1717,11 @@ contrib_plotly
 Este eje está compuesto por las categorías "No aplica" de las variables de reintegración con familia y amigos. Cabe resaltar que en este caso, "No aplica" no simboliza datos faltantes, si no a que la persona no considera tener amigos o familia a los cuales reintegrarse.
 :::
 
-A partir del análisis anterior, consideramos unicamente el 1 eje, ya que este concentra alrededor del 95% de la inercia ajustada por el criterio de Benzécri. 
-
+A partir del análisis anterior, consideramos unicamente el 1 eje, ya que este concentra alrededor del 95% de la inercia ajustada por el criterio de Benzécri.
 
 # Leves Conclusiones
 
-A partir de los Análisis de Correspondencias Múltiples realizados, puede verse que las variables consideradas poseen una amplia cantidad de relaciones interesantes. No solo se observaron las correlaciones esperadas entre algunas variables, sino que también se encontraron relaciones que nos dan características particulares de la población privada de la libertad encuestada. 
+A partir de los Análisis de Correspondencias Múltiples realizados, puede verse que las variables consideradas poseen una amplia cantidad de relaciones interesantes. No solo se observaron las correlaciones esperadas entre algunas variables, sino que también se encontraron relaciones que nos dan características particulares de la población privada de la libertad encuestada.
 
 La mayoría de estas relaciones se dan entre variables que presentan una conexión conceptual clara, dichas conexiones (y agrupaciones) pueden encontrase directamente en el cuestionario utilizado por el INEGI, ya que estas agrupaciones consisten en cada una de las secciones del formulario.
 

@@ -1,4 +1,0 @@
-"0","#|label: valuest grupo2"
-"0","#|echo: false"
-"0",""
-"0","kable(valores_test[[""2""]])"

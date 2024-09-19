@@ -1,6 +1,6 @@
 "0","#| label: carga-librerias"
 "0","#| message: false"
-"0","#| echo: true"
+"0","#| code-fold: show"
 "0","#| output: false"
 "0",""
 "0","#Manejo de datos"
@@ -45,6 +45,16 @@ Attaching package: ‘gridExtra’
 "2","Registered S3 method overwritten by 'data.table':
   method           from
   print.data.table     
+"
+"2","Registered S3 methods overwritten by 'htmltools':
+  method               from         
+  print.html           tools:rstudio
+  print.shiny.tag      tools:rstudio
+  print.shiny.tag.list tools:rstudio
+"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
 "
 "2","
 Attaching package: ‘plotly’
@@ -114,6 +124,10 @@ Attaching package: ‘FactoMineR’
 "0","source(""DatosSeleccionados.R"")"
 "2","Warning:"
 "2"," package ‘kableExtra’ was built under R version 4.3.3
+"
+"2","Registered S3 method overwritten by 'rmarkdown':
+  method         from
+  print.paged_df     
 "
 "2","
 Attaching package: ‘kableExtra’

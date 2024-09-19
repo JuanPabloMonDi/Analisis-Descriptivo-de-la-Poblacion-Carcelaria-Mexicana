@@ -1,7 +1,0 @@
-"0","#| title: AC 4 Ejes 6-2"
-"0","#| echo: false"
-"0",""
-"0","plot.PCA(res.pca,choix='var',habillage = 'contrib',cex=0.6,cex.main=0.9,cex.axis=0.9,axes = c(6,2))"
-"2","Warning:"
-"2"," ggrepel: 17 unlabeled data points (too many overlaps). Consider increasing max.overlaps
-"

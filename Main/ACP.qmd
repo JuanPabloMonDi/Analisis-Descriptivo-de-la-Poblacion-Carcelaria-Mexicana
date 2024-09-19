@@ -1,5 +1,6 @@
 ---
 title: "Análisis de Componentes Principales"
+author: "Juan Pablo Montaño Díaz & Laura Katherine Martinez Castiblanco"
 format: html
 editor: visual
 ---

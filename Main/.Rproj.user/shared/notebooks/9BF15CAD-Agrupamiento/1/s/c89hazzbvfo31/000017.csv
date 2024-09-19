@@ -1,6 +1,0 @@
-"0","#| label: graficoperfilessexo"
-"0","#| echo: false"
-"0","tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$SEXO)"
-"0",""
-"0","    plotct(tc, ""row"", col=1+(1:ncol(tc)))"
-"0",""

@@ -1,6 +1,0 @@
-"0","#| label: graficoperfilesagua"
-"0","#| echo: false"
-"0","tc<-table(DatosCualiIntra$GrupoFinal,DatosCualiIntra$CELDA_AGUA_POTABLE)"
-"0",""
-"0","    plotct(tc, ""row"", col=1+(1:ncol(tc)))"
-"0",""
