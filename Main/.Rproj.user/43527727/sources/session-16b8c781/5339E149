@@ -1,0 +1,32 @@
+{
+    "id": "5339E149",
+    "path": "~/GitHub/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/Main/dashboard.qmd",
+    "project_path": "dashboard.qmd",
+    "type": "quarto_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1727056738520.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "chunk_output_type": "console",
+        "source_window_id": "",
+        "Source": "Source",
+        "rmdVisualCollapsedChunks": "",
+        "docOutlineVisible": "1",
+        "rmdVisualModeLocation": "2:57",
+        "cursorPosition": "83,16",
+        "scrollLine": "78"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1727056789,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1727056789442,
+    "read_only": false,
+    "read_only_alternatives": []
+}
