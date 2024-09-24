@@ -8,10 +8,14 @@ El proyecto se encuentra publicado en el siguiente [link](https://juanpablomondi
  1. Una breve introducción y marco teórico del tema a investigar.
  2. Descripción y explicación de los datos a utilizar.
  3. Análisis descriptivo univariado de las variables consideradas de interés.
- 4. Análisis descriptivo bivariado entre las variables a través de un aplicativo Shiny
+ 4. Análisis descriptivo bivariado entre las variables a través de un aplicativo Shiny.
  5. Análisis de componentes principales entre las variables.
+ 6. Análisis de Correspondencias Simples (ACS) a través de un aplicativo Shiny.
+ 7. Análisis de Correspondencias Múltiples (ACM) entre las variables.
+ 8. Agrupamiento de las variables a través de *agrupamiento jerárquico* y *k-means*.
+ 9. Conclusiones del proyecto.
 
-En este momento, el proyecto aun está en desarrollo, por lo que es posible que ocurran modificaciones y adición de nuevo contenido durante estos meses.
+
 
 >[!NOTE]
 > En caso de necesitarse, el link completo del proyecto es [juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/ResumenIntro.html](https://juanpablomondi.github.io/Analisis-Descriptivo-de-la-Poblacion-Carcelaria-Mexicana/ResumenIntro.html)
